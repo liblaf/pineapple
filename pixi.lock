@@ -904,9 +904,9 @@ packages:
   size: 7792251
   timestamp: 1735584856826
 - pypi: .
-  name: liblaf-pineapple
+  name: liblaf-melon
   version: 0.0.0
-  sha256: 9b91ef305f1cde80df2fddd265c1db30ef2f08edc3fe0cd74957d3509eec6251
+  sha256: e5c97fec13d3d5d7b7e7caca7f547bf67097a1594a570b5f9ee92bb37903760f
   requires_dist:
   - fast-simplification>=0.1.9,<0.2
   - jaxtyping>=0.2.37,<0.3
@@ -914,7 +914,7 @@ packages:
   - loguru>=0.7.3,<0.8
   - matplotlib>=3.10.0,<4
   - meshio>=5.3.5,<6
-  - numpy>=2.2.2,<3
+  - numpy
   - pandas>=2.2.3,<3
   - polars>=1.21.0,<2
   - pooch>=1.8.2,<2
@@ -924,7 +924,7 @@ packages:
   - pytetwild>=0.1.dev1,<0.2
   - pyvista>=0.44.2,<0.45
   - rich>=13.9.4,<14
-  - scipy>=1.15.1,<2
+  - scipy
   - seaborn>=0.13.2,<0.14
   - trimesh>=4.6.1,<5
   requires_python: '>=3.12'

@@ -21,7 +21,7 @@ dependencies = [
   "loguru>=0.7.3,<0.8",
   "matplotlib>=3.10.0,<4",
   "meshio>=5.3.5,<6",
-  "numpy>=2.2.2,<3",
+  "numpy",
   "pandas>=2.2.3,<3",
   "polars>=1.21.0,<2",
   "pooch>=1.8.2,<2",
@@ -31,24 +31,24 @@ dependencies = [
   "pytetwild>=0.1.dev1,<0.2",
   "pyvista>=0.44.2,<0.45",
   "rich>=13.9.4,<14",
-  "scipy>=1.15.1,<2",
+  "scipy",
   "seaborn>=0.13.2,<0.14",
   "trimesh>=4.6.1,<5",
 ]
 description = "Add your description here"
 keywords = []
 license = "MIT"
-name = "liblaf-pineapple"
+name = "liblaf-melon"
 readme = "docs/README.md"
 requires-python = ">=3.12"
 version = "0.0.0"
 
 [project.urls]
-"Changelog" = "https://github.com/liblaf/pineapple/blob/main/CHANGELOG.md"
-"Homepage" = "https://github.com/liblaf/pineapple"
-"Issue Tracker" = "https://github.com/liblaf/pineapple/issues"
-"Release Notes" = "https://github.com/liblaf/pineapple/releases"
-"Source Code" = "https://github.com/liblaf/pineapple"
+"Changelog" = "https://github.com/liblaf/melon/blob/main/CHANGELOG.md"
+"Homepage" = "https://github.com/liblaf/melon"
+"Issue Tracker" = "https://github.com/liblaf/melon/issues"
+"Release Notes" = "https://github.com/liblaf/melon/releases"
+"Source Code" = "https://github.com/liblaf/melon"
 
 [tool.check-wheel-contents]
 ignore = ["W002"]
@@ -70,7 +70,7 @@ channels = ["conda-forge"]
 platforms = ["linux-64"]
 
 [tool.pixi.pypi-dependencies]
-liblaf-pineapple = { editable = true, path = "." }
+liblaf-melon = { editable = true, path = "." }
 
 [tool.pixi.system-requirements]
 cuda = "12"
