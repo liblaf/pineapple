@@ -6,6 +6,8 @@
     "asyncio",
     "cuda",
     "cython",
+    "dcmread",
+    "dicom",
     "dmypy",
     "getattr",
     "hynek",
