@@ -24,6 +24,6 @@ class ConversionDispatcher:
         raise UnsupportedConversionError(obj, type_to)
 
 
-dispatcher = ConversionDispatcher()
-convert = dispatcher.convert
-register = dispatcher.register
+conversion_dispatcher = ConversionDispatcher()
+register_converter = conversion_dispatcher.register
+convert = conversion_dispatcher.convert

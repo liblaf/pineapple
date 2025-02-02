@@ -1,4 +1,4 @@
 from . import dicom
-from .dicom import load_dicom
+from .dicom import DICOMReader, load_dicom
 
-__all__ = ["dicom", "load_dicom"]
+__all__ = ["DICOMReader", "dicom", "load_dicom"]

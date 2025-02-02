@@ -1,5 +1,5 @@
 from . import cli, io, struct, typing
-from .io import load, load_dicom, load_image_data, load_poly_data, save
+from .io import convert, load, load_dicom, load_image_data, load_poly_data, save
 from .struct import (
     DICOM,
     Acquisition,
@@ -21,6 +21,7 @@ __all__ = [
     "DICOMMeta",
     "Patient",
     "cli",
+    "convert",
     "format_date",
     "io",
     "load",
