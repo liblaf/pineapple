@@ -5,7 +5,7 @@ from liblaf.melon.typing import StrPath
 
 from . import reader_dispatcher
 
-reader_dispatcher.register(melon.io.melon.dicom.DICOMReader())
+reader_dispatcher.register(melon.io.melon.DICOMReader())
 reader_dispatcher.register(melon.io.pyvista.PolyDataReader())
 
 

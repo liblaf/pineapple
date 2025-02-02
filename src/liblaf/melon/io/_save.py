@@ -5,6 +5,7 @@ from liblaf.melon.typing import StrPath
 
 from . import writer_dispatcher
 
+writer_dispatcher.register(melon.io.melon.DICOMWriter())
 writer_dispatcher.register(melon.io.pyvista.PolyDataWriter())
 
 

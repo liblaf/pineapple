@@ -11,7 +11,7 @@ import pyvista as pv
 from liblaf import melon
 from liblaf.melon.typing import StrPath
 
-from . import DICOMMeta
+from . import DICOMMeta, parse_date
 
 
 class DICOM:
@@ -19,7 +19,7 @@ class DICOM:
 
     def __init__(self, path: StrPath) -> None:
         path = Path(path)
-        if path.is_file() and path.name == "DIRFILE":
+        if path.name == "DIRFILE":
             path = path.parent
         self.path = path
 
@@ -62,38 +62,36 @@ class DICOM:
 
     def save(self, path: StrPath) -> None:
         path = Path(path)
+        if path.name == "DIRFILE":
+            path = path.parent
         path.mkdir(parents=True, exist_ok=True)
         shutil.copy2(self.dirfile_path, path / "DIRFILE")
         for record_filepath in self.record_filepaths:
             shutil.copy2(record_filepath, path / record_filepath.name)
 
     # region metadata
-    @functools.cached_property
+    @property
     def acquisition_date(self) -> datetime.date:
-        return datetime.datetime.strptime(  # noqa: DTZ007
-            self.first_record["AcquisitionDate"].value, "%Y%m%d"
-        ).date()
+        return parse_date(self.first_record["AcquisitionDate"].value)
 
-    @functools.cached_property
+    @property
     def patient_name(self) -> str:
         name: pydicom.valuerep.PersonName = self.first_record["PatientName"].value
         return str(name)
 
-    @functools.cached_property
+    @property
     def patient_id(self) -> str:
         return self.first_record["PatientID"].value
 
-    @functools.cached_property
+    @property
     def patient_birth_date(self) -> datetime.date:
-        return datetime.datetime.strptime(  # noqa: DTZ007
-            self.first_record["PatientBirthDate"].value, "%Y%m%d"
-        ).date()
+        return parse_date(self.first_record["PatientBirthDate"].value)
 
-    @functools.cached_property
+    @property
     def patient_sex(self) -> Literal["F", "M"]:
         return self.first_record["PatientSex"].value
 
-    @functools.cached_property
+    @property
     def patient_age(self) -> int:
         age_str: str = self.first_record["PatientAge"].value
         return int(age_str.removesuffix("Y"))

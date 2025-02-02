@@ -6,18 +6,12 @@ import pyvista as pv
 from liblaf import melon
 from liblaf.melon.typing import StrPath
 
-from . import as_poly_data
+from . import as_poly_data, match_path
 
 
 class PolyDataWriter(melon.io.AbstractWriter):
     def match_path(self, path: StrPath) -> bool:
-        path = Path(path)
-        return path.suffix in {
-            ".obj",
-            ".ply",
-            ".stl",
-            ".vtp",
-        }
+        return match_path(path)
 
     def save(self, path: StrPath, obj: Any) -> None:
         path = Path(path)

@@ -1,9 +1,11 @@
 from collections.abc import Iterable, Iterator, Mapping, MutableMapping
 from pathlib import Path
-from typing import Any
+from typing import Any, Self
 
 from liblaf import melon
 from liblaf.melon.typing import StrPath
+
+from . import AttachmentsMeta
 
 
 class Attachments(MutableMapping[str, Any]):
@@ -20,6 +22,10 @@ class Attachments(MutableMapping[str, Any]):
         self.root = Path(root or ".")
         self._data = dict(data) if data else {}
         self._keys = set(keys) if keys else set()
+
+    @classmethod
+    def from_data(cls, data: Mapping[str, Any] = {}) -> Self:
+        return cls(data=data, keys=data.keys())
 
     def __getitem__(self, key: str) -> Any:
         if key not in self._data:
@@ -39,6 +45,10 @@ class Attachments(MutableMapping[str, Any]):
 
     def __len__(self) -> int:
         return len(self._keys)
+
+    @property
+    def meta(self) -> AttachmentsMeta:
+        return list(self.keys())
 
     def save(self, path: StrPath) -> None:
         path = Path(path)
