@@ -1,6 +1,15 @@
+import datetime
+from typing import Annotated, Literal
+
 import pydantic
 
-from . import Date
+from . import format_date, parse_date
+
+type Date = Annotated[
+    datetime.date,
+    pydantic.BeforeValidator(parse_date),
+    pydantic.PlainSerializer(format_date, when_used="unless-none"),
+]
 
 
 class DICOMMeta(pydantic.BaseModel):
@@ -10,4 +19,4 @@ class DICOMMeta(pydantic.BaseModel):
     PatientBirthDate: Date
     PatientID: str
     PatientName: str
-    PatientSex: str
+    PatientSex: Literal["F", "M"]

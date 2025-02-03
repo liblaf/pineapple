@@ -1,5 +1,4 @@
 import datetime
-import functools
 import shutil
 from pathlib import Path
 from typing import Literal
@@ -11,7 +10,7 @@ import pyvista as pv
 from liblaf import melon
 from liblaf.melon.typing import StrPath
 
-from . import DICOMMeta, parse_date
+from . import DICOMMeta, dcmread_cached, parse_date
 
 
 class DICOM:
@@ -23,23 +22,23 @@ class DICOM:
             path = path.parent
         self.path = path
 
-    @functools.cached_property
+    @property
     def dirfile_path(self) -> Path:
         return self.path / "DIRFILE"
 
-    @functools.cached_property
+    @property
     def dirfile(self) -> pydicom.FileDataset:
-        return pydicom.dcmread(self.dirfile_path)
+        return dcmread_cached(self.dirfile_path)
 
-    @functools.cached_property
+    @property
     def first_record(self) -> pydicom.FileDataset:
-        return pydicom.dcmread(self.record_filepaths[0])
+        return dcmread_cached(self.record_filepaths[0])
 
-    @functools.cached_property
+    @property
     def image_data(self) -> pv.ImageData:
         return melon.load_image_data(self.path)
 
-    @functools.cached_property
+    @property
     def meta(self) -> DICOMMeta:
         return DICOMMeta(
             AcquisitionDate=self.acquisition_date,
@@ -50,7 +49,7 @@ class DICOM:
             PatientSex=self.patient_sex,
         )
 
-    @functools.cached_property
+    @property
     def record_filepaths(self) -> list[Path]:
         directory_record_sequence: pydicom.Sequence = self.dirfile[
             "DirectoryRecordSequence"

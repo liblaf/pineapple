@@ -4,11 +4,10 @@ from .dicom_dataset import (
     Acquisition,
     AcquisitionMeta,
     Attachments,
-    AttachmentsMeta,
     DICOMDataset,
     DICOMDatasetMeta,
-    Patient,
-    PatientMeta,
+    Subject,
+    SubjectMeta,
 )
 
 __all__ = [
@@ -16,12 +15,11 @@ __all__ = [
     "Acquisition",
     "AcquisitionMeta",
     "Attachments",
-    "AttachmentsMeta",
     "DICOMDataset",
     "DICOMDatasetMeta",
     "DICOMMeta",
-    "Patient",
-    "PatientMeta",
+    "Subject",
+    "SubjectMeta",
     "dicom",
     "dicom_dataset",
     "format_date",

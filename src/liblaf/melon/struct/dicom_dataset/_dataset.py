@@ -1,64 +1,69 @@
 import functools
-from collections.abc import Iterable
+from collections.abc import Generator
 from pathlib import Path
 from typing import Self
 
 import liblaf.grapes as grapes  # noqa: PLR0402
-from liblaf.melon.struct.dicom_dataset._patient import Patient
 from liblaf.melon.typing import StrPath
 
-from . import Attachments, DICOMDatasetMeta
+from . import Acquisition, Attachments, DICOMDatasetMeta, Subject, SubjectMeta
 
 
 class DICOMDataset:
-    path: Path
+    _path: Path
 
-    def __init__(
-        self,
-        path: StrPath | None = None,
-        attachments: Attachments | None = None,
-        meta: DICOMDatasetMeta | None = None,
-        patients: Iterable[Patient] | None = None,
-    ) -> None:
-        self.path = Path(path or ".")
-        if attachments is not None:
-            self.attachments = attachments
+    def __init__(self, path: StrPath, meta: DICOMDatasetMeta | None = None) -> None:
+        self._path = Path(path)
         if meta is not None:
             self.meta = meta
-        if patients is not None:
-            self.patients = {patient.patient_id: patient for patient in patients}
+            self.save_meta()
 
-    @classmethod
-    def from_patients(cls, patients: Iterable[Patient]) -> Self:
-        return cls(
-            patients=patients,
-            meta=DICOMDatasetMeta(
-                patients={patient.patient_id: patient.meta for patient in patients}
-            ),
-        )
+    @property
+    def acquisitions(self) -> Generator[Acquisition]:
+        for subject in self.subjects:
+            yield from subject.acquisitions
 
-    @functools.cached_property
+    @property
     def attachments(self) -> Attachments:
-        return Attachments(root=self.path, keys=self.meta.attachments)
+        return Attachments(root=self.path)
 
     @functools.cached_property
     def meta(self) -> DICOMDatasetMeta:
         return grapes.load_pydantic(self.path / "dataset.json", DICOMDatasetMeta)
 
-    @functools.cached_property
-    def patients(self) -> dict[str, Patient]:
-        return {
-            patient_id: Patient(self.path / patient_id)
-            for patient_id, patient_meta in self.meta.patients.items()
-        }
+    @property
+    def n_acquisitions(self) -> int:
+        return sum(subject.n_acquisitions for subject in self.subjects)
 
-    def save(self, path: StrPath) -> None:
-        path = Path(path)
+    @property
+    def n_subjects(self) -> int:
+        return len(self.meta.subjects)
+
+    @property
+    def path(self) -> Path:
+        return self._path
+
+    @property
+    def subjects(self) -> Generator[Subject]:
+        for subject_id in self.meta.subjects:
+            yield Subject(self.path / subject_id)
+
+    def add_subject(self, meta: SubjectMeta) -> Subject:
+        subject = Subject(self.path / meta.PatientID, meta)
+        self.meta.subjects.append(subject.id)
+        self.save_meta()
+        return subject
+
+    def clone(self, path: StrPath) -> Self:
+        self.save_meta(path)
+        return type(self)(path=path)
+
+    def get_subject(self, patient_id: str) -> Subject:
+        return Subject(self.path / patient_id)
+
+    def save_meta(self, path: StrPath | None = None) -> None:
+        path = Path(path) if path else self.path
         path.mkdir(parents=True, exist_ok=True)
-        self.meta.attachments = self.attachments.meta
-        self.meta.patients = {
-            patient_id: patient.meta for patient_id, patient in self.patients.items()
-        }
         grapes.save_pydantic(path / "dataset.json", self.meta)
-        for patient in self.patients.values():
-            patient.save(path / patient.meta.PatientID)
+        for subject in self.subjects:
+            subject.save_meta(path / subject.id)

@@ -99,7 +99,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/89/7b/623d15216d70e6c1cf149163ee4559e6da23ea0118f8cd7c72fdfb951298/jaxtyping-0.2.37-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/bc/b3/9458adb9472e61a998c8c4d95cfdfec91c73c53a375b30b1428310f923e4/kiwisolver-1.4.8-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/83/60/d497a310bde3f01cb805196ac61b7ad6dc5dcf8dce66634dc34364b20b4f/lazy_loader-0.4-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/f4/9d/5c8744891a86dc8480ffa1a98ede1a859bf1e13aaea42a8a3f953f22cf5f/liblaf_grapes-0.0.2-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/18/d2/825d051f85628f582e02fd78ec6069d35560cb74f6479ca12ceda75e4e65/liblaf_grapes-0.0.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/0c/29/0348de65b8cc732daa3e33e67806420b2ae89bdce2b04af740289c5c6c8c/loguru-0.7.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/42/d7/1ec15b46af6af88f19b8e5ffea08fa375d433c998b8a7639e76935c14f1f/markdown_it_py-3.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/d6/0d/80d7071803df1957c304bc096a714334dda7eb41ecfdd28dcfb49b1cde0e/marshmallow-3.26.0-py3-none-any.whl
@@ -1024,10 +1024,10 @@ packages:
   purls: []
   size: 7792251
   timestamp: 1735584856826
-- pypi: https://files.pythonhosted.org/packages/f4/9d/5c8744891a86dc8480ffa1a98ede1a859bf1e13aaea42a8a3f953f22cf5f/liblaf_grapes-0.0.2-py3-none-any.whl
+- pypi: https://files.pythonhosted.org/packages/18/d2/825d051f85628f582e02fd78ec6069d35560cb74f6479ca12ceda75e4e65/liblaf_grapes-0.0.3-py3-none-any.whl
   name: liblaf-grapes
-  version: 0.0.2
-  sha256: 61cd7f2974429d5847218cfcf31b6173e47a922e1b4489c6cc6edb8f42316a34
+  version: 0.0.3
+  sha256: 95a6f88c531bc0fb6afc19e706c717f8d1fe865752d58082d80fc6be81b617f5
   requires_dist:
   - about-time>=4.2.1,<5
   - boltons>=24.1.0,<25
@@ -1045,12 +1045,12 @@ packages:
 - pypi: .
   name: liblaf-melon
   version: 0.0.0
-  sha256: 3ee6835c2f35c8619f2394c5d2abc25e61c033fdb0466cbb7ecb3d6387848d75
+  sha256: 42b56df177f111aa9bcdd4fe80be1846e78256289e3451442567d9b8fafe9d6c
   requires_dist:
   - fast-simplification>=0.1.9,<0.2
   - jaxtyping>=0.2.37,<0.3
   - lazy-loader>=0.4,<0.5
-  - liblaf-grapes>=0.0.2,<0.0.3
+  - liblaf-grapes>=0.0.3,<0.0.4
   - loguru>=0.7.3,<0.8
   - matplotlib>=3.10.0,<4
   - meshio>=5.3.5,<6

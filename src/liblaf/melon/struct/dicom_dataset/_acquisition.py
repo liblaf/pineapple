@@ -1,7 +1,7 @@
 import datetime
 import functools
 from pathlib import Path
-from typing import Self
+from typing import Literal, Self
 
 # make pyright happy
 import liblaf.grapes as grapes  # noqa: PLR0402
@@ -12,53 +12,62 @@ from . import AcquisitionMeta, Attachments
 
 
 class Acquisition:
-    path: Path
+    _path: Path
 
-    def __init__(
-        self,
-        path: StrPath | None = None,
-        attachments: Attachments | None = None,
-        meta: AcquisitionMeta | None = None,
-    ) -> None:
-        self.path = Path(path or ".")
-        if attachments is not None:
-            self.attachments = attachments
+    def __init__(self, path: StrPath, meta: AcquisitionMeta | None = None) -> None:
+        self._path = Path(path)
         if meta is not None:
             self.meta = meta
+            self.save_meta()
 
-    @classmethod
-    def from_dicom(cls, dicom: melon.DICOM) -> Self:
-        return cls(
-            attachments=Attachments.from_data(data={"CT/DIRFILE": dicom}),
-            meta=AcquisitionMeta(
-                AcquisitionDate=dicom.acquisition_date,
-                PatientAge=dicom.patient_age,
-                PatientBirthDate=dicom.patient_birth_date,
-                PatientID=dicom.patient_id,
-                PatientName=dicom.patient_name,
-                PatientSex=dicom.patient_sex,
-            ),
-        )
-
-    @functools.cached_property
+    @property
     def attachments(self) -> Attachments:
-        return Attachments(root=self.path, keys=self.meta.attachments)
+        return Attachments(root=self.path)
+
+    @property
+    def id(self) -> str:
+        return melon.struct.dicom.format_date(self.acquisition_date)
 
     @functools.cached_property
     def meta(self) -> AcquisitionMeta:
         return grapes.load_pydantic(self.path / "acquisition.json", AcquisitionMeta)
 
-    def save(self, path: StrPath) -> None:
-        path = Path(path)
-        path.mkdir(parents=True, exist_ok=True)
-        self.meta.attachments = self.attachments.meta
-        grapes.save_pydantic(path / "acquisition.json", self.meta)
-        self.attachments.save(path)
+    @property
+    def path(self) -> Path:
+        return self._path
 
+    def clone(self, path: StrPath) -> Self:
+        self.save_meta(path)
+        return type(self)(path=path, meta=self.meta)
+
+    def save_meta(self, path: StrPath | None = None) -> None:
+        path = Path(path) if path else self.path
+        path.mkdir(parents=True, exist_ok=True)
+        grapes.save_pydantic(path / "acquisition.json", self.meta)
+
+    # region metadata
     @property
     def acquisition_date(self) -> datetime.date:
         return self.meta.AcquisitionDate
 
     @property
-    def acquisition_date_str(self) -> str:
-        return melon.struct.dicom.format_date(self.acquisition_date)
+    def patient_name(self) -> str:
+        return self.meta.PatientName
+
+    @property
+    def patient_id(self) -> str:
+        return self.meta.PatientID
+
+    @property
+    def patient_birth_date(self) -> datetime.date:
+        return self.meta.PatientBirthDate
+
+    @property
+    def patient_sex(self) -> Literal["F", "M"]:
+        return self.meta.PatientSex
+
+    @property
+    def patient_age(self) -> int:
+        return self.meta.PatientAge
+
+    # endregion metadata

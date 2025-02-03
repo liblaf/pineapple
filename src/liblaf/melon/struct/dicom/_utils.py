@@ -1,7 +1,14 @@
 import datetime
-from typing import Annotated
+import functools
 
-import pydantic
+import pydicom
+
+from liblaf.melon.typing import StrPath
+
+
+@functools.lru_cache
+def dcmread_cached(path: StrPath) -> pydicom.FileDataset:
+    return pydicom.dcmread(path)
 
 
 def parse_date(date: str | datetime.datetime | datetime.date) -> datetime.date:
@@ -13,16 +20,9 @@ def parse_date(date: str | datetime.datetime | datetime.date) -> datetime.date:
         case datetime.date():
             return date
         case _:
-            msg: str = f"Invalid date: {date!r}"
+            msg: str = f"Invalid date: `{date}`"
             raise ValueError(msg)
 
 
 def format_date(date: datetime.date) -> str:
     return date.strftime("%Y%m%d")
-
-
-type Date = Annotated[
-    datetime.date,
-    pydantic.BeforeValidator(parse_date),
-    pydantic.PlainSerializer(format_date, when_used="unless-none"),
-]
