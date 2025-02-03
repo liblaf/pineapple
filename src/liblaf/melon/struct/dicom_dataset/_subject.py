@@ -46,8 +46,8 @@ class Subject:
         return self._path
 
     def add_acquisition(self, meta: AcquisitionMeta) -> Acquisition:
-        acq_date_str: str = melon.struct.dicom.format_date(meta.AcquisitionDate)
-        acq = Acquisition(self.path / acq_date_str, meta)
+        acq_id: str = melon.struct.dicom.format_date(meta.AcquisitionDate)
+        acq = Acquisition(self.path / acq_id, meta)
         self.meta.acquisitions.append(acq.acquisition_date)
         self.save_meta()
         return acq
@@ -56,9 +56,7 @@ class Subject:
         self.save_meta(path)
         return type(self)(path=path)
 
-    def get_acquisition(
-        self, acq_date: datetime.date | datetime.datetime | str
-    ) -> Acquisition:
+    def get_acquisition(self, acq_date: melon.struct.dicom.DateLike) -> Acquisition:
         acq_date: datetime.date = melon.struct.dicom.parse_date(acq_date)
         return Acquisition(self.path / melon.struct.dicom.format_date(acq_date))
 

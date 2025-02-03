@@ -5,13 +5,15 @@ import pydicom
 
 from liblaf.melon.typing import StrPath
 
+type DateLike = str | datetime.datetime | datetime.date
+
 
 @functools.lru_cache
 def dcmread_cached(path: StrPath) -> pydicom.FileDataset:
     return pydicom.dcmread(path)
 
 
-def parse_date(date: str | datetime.datetime | datetime.date) -> datetime.date:
+def parse_date(date: DateLike) -> datetime.date:
     match date:
         case str():
             return datetime.datetime.strptime(date, "%Y%m%d").date()  # noqa: DTZ007

@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Self
 
 import liblaf.grapes as grapes  # noqa: PLR0402
+from liblaf import melon
 from liblaf.melon.typing import StrPath
 
 from . import Acquisition, Attachments, DICOMDatasetMeta, Subject, SubjectMeta
@@ -58,8 +59,14 @@ class DICOMDataset:
         self.save_meta(path)
         return type(self)(path=path)
 
-    def get_subject(self, patient_id: str) -> Subject:
-        return Subject(self.path / patient_id)
+    def get_acquisition(
+        self, subject_id: str, acq_date: melon.struct.dicom.DateLike
+    ) -> Acquisition:
+        subject: Subject = self.get_subject(subject_id)
+        return subject.get_acquisition(acq_date)
+
+    def get_subject(self, subject_id: str) -> Subject:
+        return Subject(self.path / subject_id)
 
     def save_meta(self, path: StrPath | None = None) -> None:
         path = Path(path) if path else self.path

@@ -19,8 +19,11 @@ class Attachments:
             self.save(key, value)
         return self
 
+    def get(self, key: str) -> Path:
+        return self.root / key
+
     def load(self, key: str) -> Any:
-        return melon.load(self.root / key)
+        return melon.load(self.get(key))
 
     def save(self, key: str, value: Any) -> None:
-        melon.save(self.root / key, value)
+        melon.save(self.get(key), value)

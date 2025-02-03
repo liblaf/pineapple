@@ -36,6 +36,10 @@ class Acquisition:
     def path(self) -> Path:
         return self._path
 
+    @property
+    def subject_id(self) -> str:
+        return self.meta.PatientID
+
     def clone(self, path: StrPath) -> Self:
         self.save_meta(path)
         return type(self)(path=path, meta=self.meta)

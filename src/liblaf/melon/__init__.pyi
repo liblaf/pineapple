@@ -1,5 +1,14 @@
-from . import cli, io, struct, typing
-from .io import convert, load, load_dicom, load_image_data, load_poly_data, save
+from . import cli, io, ops, struct, typing
+from .io import (
+    as_image_data,
+    convert,
+    load,
+    load_dicom,
+    load_image_data,
+    load_poly_data,
+    save,
+)
+from .ops import contour, gaussian_smooth
 from .struct import (
     DICOM,
     Acquisition,
@@ -24,14 +33,18 @@ __all__ = [
     "DICOMMeta",
     "Subject",
     "SubjectMeta",
+    "as_image_data",
     "cli",
+    "contour",
     "convert",
     "format_date",
+    "gaussian_smooth",
     "io",
     "load",
     "load_dicom",
     "load_image_data",
     "load_poly_data",
+    "ops",
     "parse_date",
     "save",
     "struct",

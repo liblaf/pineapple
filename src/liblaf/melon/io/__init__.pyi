@@ -19,7 +19,7 @@ from .dispatcher import (
     writer_dispatcher,
 )
 from .melon import load_dicom
-from .pyvista import as_poly_data, load_image_data, load_poly_data
+from .pyvista import as_image_data, as_poly_data, load_image_data, load_poly_data
 
 __all__ = [
     "AbstractConverter",
@@ -29,6 +29,7 @@ __all__ = [
     "ReaderDispatcher",
     "UnsupportedConversionError",
     "WriterDispatcher",
+    "as_image_data",
     "as_poly_data",
     "conversion_dispatcher",
     "conversion_dispatcher",
