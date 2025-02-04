@@ -2,15 +2,17 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any, Self
 
+import pyvista as pv
+
 from liblaf import melon
 from liblaf.melon.typing import StrPath
 
 
 class Attachments:
-    root: Path
+    path: Path
 
-    def __init__(self, root: StrPath) -> None:
-        self.root = Path(root)
+    def __init__(self, path: StrPath) -> None:
+        self.path = Path(path)
 
     @classmethod
     def from_data(cls, path: StrPath, data: Mapping[str, Any]) -> Self:
@@ -20,10 +22,16 @@ class Attachments:
         return self
 
     def get(self, key: str) -> Path:
-        return self.root / key
+        return self.path / key
 
     def load(self, key: str) -> Any:
         return melon.load(self.get(key))
 
-    def save(self, key: str, value: Any) -> None:
-        melon.save(self.get(key), value)
+    def load_dicom(self, key: str) -> melon.DICOM:
+        return melon.load_dicom(self.get(key))
+
+    def load_poly_data(self, key: str) -> pv.PolyData:
+        return melon.load_poly_data(self.get(key))
+
+    def save(self, key: str, data: Any) -> None:
+        melon.save(self.get(key), data)

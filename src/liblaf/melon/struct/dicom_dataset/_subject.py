@@ -11,11 +11,9 @@ from liblaf.melon.typing import StrPath
 from . import Acquisition, AcquisitionMeta, Attachments, SubjectMeta
 
 
-class Subject:
-    _path: Path
-
+class Subject(Attachments):
     def __init__(self, path: StrPath, meta: SubjectMeta | None = None) -> None:
-        self._path = Path(path)
+        super().__init__(path)
         if meta is not None:
             self.meta = meta
             self.save_meta()
@@ -26,24 +24,16 @@ class Subject:
             yield Acquisition(self.path / melon.struct.dicom.format_date(acq_date))
 
     @property
-    def attachments(self) -> Attachments:
-        return Attachments(root=self.path)
-
-    @property
     def id(self) -> str:
         return self.patient_id
 
     @functools.cached_property
     def meta(self) -> SubjectMeta:
-        return grapes.load_pydantic(self.path / "patient.json", SubjectMeta)
+        return grapes.load_pydantic(self.path / "subject.json", SubjectMeta)
 
     @property
     def n_acquisitions(self) -> int:
         return len(self.meta.acquisitions)
-
-    @property
-    def path(self) -> Path:
-        return self._path
 
     def add_acquisition(self, meta: AcquisitionMeta) -> Acquisition:
         acq_id: str = melon.struct.dicom.format_date(meta.AcquisitionDate)
@@ -68,6 +58,7 @@ class Subject:
             acq.save_meta(path / acq.id)
 
     # region metadata
+
     @property
     def patient_name(self) -> str:
         return self.meta.PatientName
@@ -83,9 +74,5 @@ class Subject:
     @property
     def patient_sex(self) -> Literal["F", "M"]:
         return self.meta.PatientSex
-
-    @property
-    def patient_age(self) -> int:
-        return self.meta.PatientAge
 
     # endregion metadata

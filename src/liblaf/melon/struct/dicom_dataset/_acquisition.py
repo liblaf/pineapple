@@ -11,18 +11,12 @@ from liblaf.melon.typing import StrPath
 from . import AcquisitionMeta, Attachments
 
 
-class Acquisition:
-    _path: Path
-
+class Acquisition(Attachments):
     def __init__(self, path: StrPath, meta: AcquisitionMeta | None = None) -> None:
-        self._path = Path(path)
+        super().__init__(path)
         if meta is not None:
             self.meta = meta
             self.save_meta()
-
-    @property
-    def attachments(self) -> Attachments:
-        return Attachments(root=self.path)
 
     @property
     def id(self) -> str:
@@ -31,10 +25,6 @@ class Acquisition:
     @functools.cached_property
     def meta(self) -> AcquisitionMeta:
         return grapes.load_pydantic(self.path / "acquisition.json", AcquisitionMeta)
-
-    @property
-    def path(self) -> Path:
-        return self._path
 
     @property
     def subject_id(self) -> str:
@@ -50,6 +40,7 @@ class Acquisition:
         grapes.save_pydantic(path / "acquisition.json", self.meta)
 
     # region metadata
+
     @property
     def acquisition_date(self) -> datetime.date:
         return self.meta.AcquisitionDate

@@ -1,21 +1,22 @@
-from . import correspondence, image_data, registration, transfer, transformations
+from . import correspondence, pyvista, registration, transfer, transformations
 from .correspondence import (
     NearestPointOnSurfaceResult,
     NearestVertexResult,
     nearest_point_on_surface,
     nearest_vertex,
 )
-from .image_data import contour, gaussian_smooth
+from .pyvista import contour, extract_points, gaussian_smooth
 
 __all__ = [
     "NearestPointOnSurfaceResult",
     "NearestVertexResult",
     "contour",
     "correspondence",
+    "extract_points",
     "gaussian_smooth",
-    "image_data",
     "nearest_point_on_surface",
     "nearest_vertex",
+    "pyvista",
     "registration",
     "transfer",
     "transformations",

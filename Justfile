@@ -8,11 +8,11 @@ build:
 gen-init:
     ./scripts/gen-init.sh
 
-lint: lint-python lint-toml
+lint: lint-toml lint-python
 
 lint-python:
     ruff format
-    ruff check --fix --statistics
+    ruff check --fix
 
 lint-toml:
     sort-toml .ruff.toml pyproject.toml

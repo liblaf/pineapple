@@ -10,11 +10,9 @@ from liblaf.melon.typing import StrPath
 from . import Acquisition, Attachments, DICOMDatasetMeta, Subject, SubjectMeta
 
 
-class DICOMDataset:
-    _path: Path
-
+class DICOMDataset(Attachments):
     def __init__(self, path: StrPath, meta: DICOMDatasetMeta | None = None) -> None:
-        self._path = Path(path)
+        super().__init__(path)
         if meta is not None:
             self.meta = meta
             self.save_meta()
@@ -23,10 +21,6 @@ class DICOMDataset:
     def acquisitions(self) -> Generator[Acquisition]:
         for subject in self.subjects:
             yield from subject.acquisitions
-
-    @property
-    def attachments(self) -> Attachments:
-        return Attachments(root=self.path)
 
     @functools.cached_property
     def meta(self) -> DICOMDatasetMeta:
@@ -39,10 +33,6 @@ class DICOMDataset:
     @property
     def n_subjects(self) -> int:
         return len(self.meta.subjects)
-
-    @property
-    def path(self) -> Path:
-        return self._path
 
     @property
     def subjects(self) -> Generator[Subject]:
