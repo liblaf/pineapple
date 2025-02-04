@@ -1,6 +1,9 @@
 from . import cli, io, ops, struct, typing
 from .io import (
     as_image_data,
+    as_point_set,
+    as_poly_data,
+    as_trimesh,
     convert,
     load,
     load_dicom,
@@ -8,7 +11,14 @@ from .io import (
     load_poly_data,
     save,
 )
-from .ops import contour, gaussian_smooth
+from .ops import (
+    NearestPointOnSurfaceResult,
+    NearestVertexResult,
+    contour,
+    gaussian_smooth,
+    nearest_point_on_surface,
+    nearest_vertex,
+)
 from .struct import (
     DICOM,
     Acquisition,
@@ -31,9 +41,14 @@ __all__ = [
     "DICOMDataset",
     "DICOMDatasetMeta",
     "DICOMMeta",
+    "NearestPointOnSurfaceResult",
+    "NearestVertexResult",
     "Subject",
     "SubjectMeta",
     "as_image_data",
+    "as_point_set",
+    "as_poly_data",
+    "as_trimesh",
     "cli",
     "contour",
     "convert",
@@ -44,6 +59,8 @@ __all__ = [
     "load_dicom",
     "load_image_data",
     "load_poly_data",
+    "nearest_point_on_surface",
+    "nearest_vertex",
     "ops",
     "parse_date",
     "save",

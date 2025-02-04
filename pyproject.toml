@@ -15,6 +15,8 @@ authors = [
 ]
 classifiers = []
 dependencies = [
+  "numpy",
+  "scipy",
   "fast-simplification>=0.1.9,<0.2",
   "jaxtyping>=0.2.37,<0.3",
   "lazy-loader>=0.4,<0.5",
@@ -22,7 +24,6 @@ dependencies = [
   "loguru>=0.7.3,<0.8",
   "matplotlib>=3.10.0,<4",
   "meshio>=5.3.5,<6",
-  "numpy",
   "pandas>=2.2.3,<3",
   "polars>=1.21.0,<2",
   "pooch>=1.8.2,<2",
@@ -33,9 +34,9 @@ dependencies = [
   "pytetwild>=0.1.dev1,<0.2",
   "pyvista>=0.44.2,<0.45",
   "rich>=13.9.4,<14",
-  "scipy",
   "seaborn>=0.13.2,<0.14",
   "trimesh>=4.6.1,<5",
+  "attrs>=25.1.0,<26",
 ]
 description = "Add your description here"
 keywords = []
@@ -60,7 +61,7 @@ packages = ["src/liblaf"]
 
 [tool.pixi.dependencies]
 jax = ">=0.4.35,<0.5"
-jaxlib = { build = "*cuda*", version = ">=0.4.35,<0.5" }
+jaxlib = { build = "*cuda*" }
 python = ">=3.12,<3.13"
 
 [tool.pixi.environments]

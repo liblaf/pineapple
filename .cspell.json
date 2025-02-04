@@ -20,6 +20,7 @@
     "meshio",
     "mkdocs",
     "mypy",
+    "ndarray",
     "numpy",
     "pipenv",
     "pixi",

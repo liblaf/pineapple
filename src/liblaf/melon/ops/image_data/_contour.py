@@ -1,9 +1,9 @@
 from collections.abc import Sequence
 from typing import Any, Literal
 
-import numpy.typing as npt
 import pyvista as pv
 from jaxtyping import Float
+from numpy.typing import ArrayLike
 
 from liblaf import melon
 
@@ -11,7 +11,7 @@ from liblaf import melon
 def contour(
     data: Any,
     isosurfaces: int | Sequence[float] | None = None,
-    scalars: str | Float[npt.ArrayLike, "..."] | None = None,
+    scalars: str | Float[ArrayLike, "..."] | None = None,
     *,
     compute_normals: bool = False,
     compute_gradients: bool = False,

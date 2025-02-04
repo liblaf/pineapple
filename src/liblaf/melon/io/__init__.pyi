@@ -1,4 +1,4 @@
-from . import dispatcher, melon, pyvista
+from . import dispatcher, melon, pyvista, trimesh
 from ._load import load
 from ._save import save
 from .dispatcher import (
@@ -19,7 +19,14 @@ from .dispatcher import (
     writer_dispatcher,
 )
 from .melon import load_dicom
-from .pyvista import as_image_data, as_poly_data, load_image_data, load_poly_data
+from .pyvista import (
+    as_image_data,
+    as_point_set,
+    as_poly_data,
+    load_image_data,
+    load_poly_data,
+)
+from .trimesh import as_trimesh
 
 __all__ = [
     "AbstractConverter",
@@ -30,7 +37,9 @@ __all__ = [
     "UnsupportedConversionError",
     "WriterDispatcher",
     "as_image_data",
+    "as_point_set",
     "as_poly_data",
+    "as_trimesh",
     "conversion_dispatcher",
     "conversion_dispatcher",
     "convert",
@@ -46,6 +55,7 @@ __all__ = [
     "register_reader",
     "register_writer",
     "save",
+    "trimesh",
     "warning_unsupported_association",
     "writer_dispatcher",
 ]
