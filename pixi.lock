@@ -1109,7 +1109,7 @@ packages:
 - pypi: .
   name: liblaf-melon
   version: 0.0.0
-  sha256: e1b3aca405b0e723ba6ced14be019a18a1d8bee844e4f857f20d0d7bad8f9a2b
+  sha256: a2be47afe394962b9f0ae1fbf28c0c496ad131a432eaff23620f06bd7ac4385d
   requires_dist:
   - attrs>=25.1.0,<26
   - fast-simplification>=0.1.9,<0.2

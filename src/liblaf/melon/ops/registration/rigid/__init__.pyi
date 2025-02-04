@@ -1,3 +1,11 @@
-from . import preprocess, trimesh_to_trimesh
+from ._abc import RigidRegistrationAlgorithm
+from ._icp import RigidICP
+from ._main import rigid_align
+from ._result import RigidRegistrationResult
 
-__all__ = ["preprocess", "trimesh_to_trimesh"]
+__all__ = [
+    "RigidICP",
+    "RigidRegistrationAlgorithm",
+    "RigidRegistrationResult",
+    "rigid_align",
+]

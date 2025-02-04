@@ -61,7 +61,7 @@ packages = ["src/liblaf"]
 
 [tool.pixi.dependencies]
 jax = ">=0.4.35,<0.5"
-jaxlib = { build = "*cuda*", version = ">=0.4.35,<0.5" }
+jaxlib = { build = "*cuda*" }
 python = ">=3.12,<3.13"
 
 [tool.pixi.environments]

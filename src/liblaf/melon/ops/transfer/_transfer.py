@@ -6,9 +6,10 @@ import pyvista as pv
 from jaxtyping import ScalarLike
 
 from liblaf import melon
+from liblaf.melon.ops.transfer._utils import get_fill_value
 from liblaf.melon.typing import Attrs
 
-from . import TransferAlgorithm, TransferAuto
+from . import TransferAlgorithm, TransferAlgorithmPrepared, TransferAuto
 
 
 def transfer_point_to_point(
@@ -16,25 +17,18 @@ def transfer_point_to_point(
     target: Any,
     data: Iterable[str],
     *,
-    algorithm: TransferAlgorithm | None = None,
+    algo: TransferAlgorithm | None = None,
     fill_value: ScalarLike | Mapping[str, ScalarLike | None] | None = None,
 ) -> Attrs:
-    if algorithm is None:
-        algorithm = TransferAuto()
+    if algo is None:
+        algo = TransferAuto()
     if not isinstance(fill_value, Mapping):
-        fill_value = {attr: fill_value for attr in data}
-    aux: Any = algorithm.prepare(source, target)
+        fill_value = {key: fill_value for key in data}
+    prepared: TransferAlgorithmPrepared = algo.prepare(source, target)
     source: pv.PointSet = melon.as_point_set(source)
-    target: pv.PointSet = melon.as_point_set(target)
-    result: Attrs = {
-        attr: algorithm.transfer(
-            aux, source.point_data[attr], fill_value=fill_value[attr]
-        )
-        for attr in data
-    }
-    for attr in data:
-        fill: ScalarLike | None = fill_value.get(attr)
-        if fill is None:
-            fill = np.zeros((), dtype=result[attr].dtype).item()
-        result[attr] = algorithm.transfer(aux, source.point_data[attr], fill_value=fill)
+    result: Attrs = {}
+    for key in data:
+        attr: np.ndarray = source.point_data[key]
+        fill: ScalarLike = get_fill_value(attr.dtype, fill_value.get(key))
+        result[key] = prepared.transfer(attr, fill_value=fill)
     return result

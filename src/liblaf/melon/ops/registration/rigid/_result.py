@@ -7,4 +7,4 @@ from jaxtyping import Float
 class RigidRegistrationResult:
     loss: float
     transformation: Float[np.ndarray, "4 4"]
-    records: list[Float[np.ndarray, "4 4"]] = attrs.field(factory=list)
+    history: list[Float[np.ndarray, "4 4"]] = attrs.field(factory=list)

@@ -1,23 +1,56 @@
 from . import correspondence, pyvista, registration, transfer, transformations
 from .correspondence import (
+    NearestPointOnSurface,
+    NearestPointOnSurfacePrepared,
     NearestPointOnSurfaceResult,
+    NearestVertex,
+    NearestVertexPrepared,
     NearestVertexResult,
     nearest_point_on_surface,
     nearest_vertex,
 )
-from .pyvista import contour, extract_points, gaussian_smooth
+from .pyvista import contour, extract_points, gaussian_smooth, transform
+from .transfer import (
+    TransferAlgorithm,
+    TransferAlgorithmPrepared,
+    TransferAuto,
+    TransferAutoPrepared,
+    TransferNearestPointOnSurface,
+    TransferNearestPointOnSurfacePrepared,
+    TransferNearestVertex,
+    TransferNearestVertexPrepared,
+    get_fill_value,
+    transfer_point_to_point,
+)
+from .transformations import concat_transforms
 
 __all__ = [
+    "NearestPointOnSurface",
+    "NearestPointOnSurfacePrepared",
     "NearestPointOnSurfaceResult",
+    "NearestVertex",
+    "NearestVertexPrepared",
     "NearestVertexResult",
+    "TransferAlgorithm",
+    "TransferAlgorithmPrepared",
+    "TransferAuto",
+    "TransferAutoPrepared",
+    "TransferNearestPointOnSurface",
+    "TransferNearestPointOnSurfacePrepared",
+    "TransferNearestVertex",
+    "TransferNearestVertexPrepared",
+    "concat_transforms",
     "contour",
     "correspondence",
     "extract_points",
     "gaussian_smooth",
+    "get_fill_value",
     "nearest_point_on_surface",
     "nearest_vertex",
     "pyvista",
     "registration",
     "transfer",
+    "transfer_point_to_point",
+    "transform",
     "transformations",
 ]

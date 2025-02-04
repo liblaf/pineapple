@@ -1,51 +1,45 @@
-from typing import Any, NamedTuple
+from typing import Any
 
 import attrs
 import numpy as np
-from jaxtyping import Bool, Integer, Num, ScalarLike
+from jaxtyping import Bool, Integer, Num, ScalarLike, Shaped
 from numpy.typing import ArrayLike
 
 from liblaf import melon
 
-from . import TransferAlgorithm
+from . import TransferAlgorithm, TransferAlgorithmPrepared
 
 
-class NearestVertexAuxiliary(NamedTuple):
+@attrs.frozen
+class TransferNearestVertexPrepared(TransferAlgorithmPrepared):
+    missing: Bool[np.ndarray, " target_points"]
     vertex_id: Integer[np.ndarray, " target_points"]
 
+    def transfer(
+        self, data: Shaped[ArrayLike, "source_points ..."], fill_value: ScalarLike
+    ) -> Any:
+        data: Num[np.ndarray, "source_points ..."] = np.asarray(data)
+        result: Shaped[np.ndarray, "target_points ..."] = data[self.vertex_id].copy()
+        result[self.missing] = fill_value
+        return result
 
-@attrs.define(frozen=True)
-class TransferNearestVertex(TransferAlgorithm[NearestVertexAuxiliary]):
+
+@attrs.frozen
+class TransferNearestVertex(TransferAlgorithm):
     distance_upper_bound: float = 0.1
     max_k: int = 32
     normal_threshold: float = 0.8
     workers: int = -1
 
-    def prepare(self, source: Any, target: Any) -> NearestVertexAuxiliary:
-        vertex_id: Integer[np.ndarray, " target_points"]
-        _, vertex_id = melon.nearest_vertex(
+    def prepare(self, source: Any, target: Any) -> TransferNearestVertexPrepared:
+        corresp: melon.NearestVertexResult = melon.nearest_vertex(
             source,
             target,
-            distance_upper_bound=self.distance_upper_bound,
+            distance_threshold=self.distance_upper_bound,
             max_k=self.max_k,
             normal_threshold=self.normal_threshold,
             workers=self.workers,
         )
-        return NearestVertexAuxiliary(vertex_id=vertex_id)
-
-    def transfer(
-        self,
-        aux: NearestVertexAuxiliary,
-        data: Num[ArrayLike, "source_points ..."],
-        fill_value: ScalarLike | None = None,
-    ) -> Any:
-        data: Num[np.ndarray, "source_points ..."] = np.asarray(data)
-        vertex_id: Integer[np.ndarray, " target_points"] = aux.vertex_id
-        valid_mask: Bool[np.ndarray, " target_points"] = vertex_id != -1
-        if valid_mask.all():
-            return data[vertex_id]
-        result: Num[np.ndarray, "target_points ..."] = np.full(
-            (vertex_id.shape[0], *data.shape[1:]), fill_value, dtype=data.dtype
+        return TransferNearestVertexPrepared(
+            missing=corresp.missing, vertex_id=corresp.vertex_id
         )
-        result[valid_mask] = data[vertex_id[valid_mask]]
-        return result
