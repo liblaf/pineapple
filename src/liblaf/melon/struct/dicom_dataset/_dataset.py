@@ -1,5 +1,4 @@
 import functools
-from collections.abc import Generator
 from pathlib import Path
 from typing import Self
 
@@ -18,9 +17,8 @@ class DICOMDataset(Attachments):
             self.save_meta()
 
     @property
-    def acquisitions(self) -> Generator[Acquisition]:
-        for subject in self.subjects:
-            yield from subject.acquisitions
+    def acquisitions(self) -> list[Acquisition]:
+        return [acq for subject in self.subjects for acq in subject.acquisitions]
 
     @functools.cached_property
     def meta(self) -> DICOMDatasetMeta:
@@ -35,9 +33,8 @@ class DICOMDataset(Attachments):
         return len(self.meta.subjects)
 
     @property
-    def subjects(self) -> Generator[Subject]:
-        for subject_id in self.meta.subjects:
-            yield Subject(self.path / subject_id)
+    def subjects(self) -> list[Subject]:
+        return [Subject(self.path / subject_id) for subject_id in self.meta.subjects]
 
     def add_subject(self, meta: SubjectMeta) -> Subject:
         subject = Subject(self.path / meta.PatientID, meta)

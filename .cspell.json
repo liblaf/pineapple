@@ -52,6 +52,7 @@
     "sdist",
     "stefanzweifel",
     "trimesh",
+    "typer",
     "ubelt",
     "vecdot",
     "venv"

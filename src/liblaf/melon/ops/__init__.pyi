@@ -10,6 +10,12 @@ from .correspondence import (
     nearest_vertex,
 )
 from .pyvista import contour, extract_points, gaussian_smooth, transform
+from .registration import (
+    RigidICP,
+    RigidRegistrationAlgorithm,
+    RigidRegistrationResult,
+    rigid_align,
+)
 from .transfer import (
     TransferAlgorithm,
     TransferAlgorithmPrepared,
@@ -31,6 +37,9 @@ __all__ = [
     "NearestVertex",
     "NearestVertexPrepared",
     "NearestVertexResult",
+    "RigidICP",
+    "RigidRegistrationAlgorithm",
+    "RigidRegistrationResult",
     "TransferAlgorithm",
     "TransferAlgorithmPrepared",
     "TransferAuto",
@@ -49,6 +58,7 @@ __all__ = [
     "nearest_vertex",
     "pyvista",
     "registration",
+    "rigid_align",
     "transfer",
     "transfer_point_to_point",
     "transform",

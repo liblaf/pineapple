@@ -1,6 +1,5 @@
 import datetime
 import functools
-from collections.abc import Generator
 from pathlib import Path
 from typing import Literal, Self
 
@@ -19,9 +18,11 @@ class Subject(Attachments):
             self.save_meta()
 
     @property
-    def acquisitions(self) -> Generator[Acquisition]:
-        for acq_date in self.meta.acquisitions:
-            yield Acquisition(self.path / melon.struct.dicom.format_date(acq_date))
+    def acquisitions(self) -> list[Acquisition]:
+        return [
+            Acquisition(self.path / melon.struct.dicom.format_date(acq_date))
+            for acq_date in self.meta.acquisitions
+        ]
 
     @property
     def id(self) -> str:
