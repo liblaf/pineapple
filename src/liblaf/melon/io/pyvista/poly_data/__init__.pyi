@@ -1,5 +1,7 @@
 from . import conversion
+from ._load_obj import load_obj
 from ._reader import PolyDataReader, load_poly_data
+from ._save_obj import save_obj
 from ._utils import match_path
 from ._writer import PolyDataWriter
 from .conversion import as_poly_data
@@ -9,6 +11,8 @@ __all__ = [
     "PolyDataWriter",
     "as_poly_data",
     "conversion",
+    "load_obj",
     "load_poly_data",
     "match_path",
+    "save_obj",
 ]

@@ -2,7 +2,7 @@ import abc
 from pathlib import Path
 from typing import Any
 
-from liblaf.melon.typing import StrPath
+from liblaf.melon.typed import StrPath
 
 
 class AbstractWriter(abc.ABC):

@@ -1,0 +1,380 @@
+{
+  "commonDir": "",
+  "formatVersion": 67,
+  "layout": {
+    "items": [
+      {
+        "itemId": 0,
+        "itemType": "node",
+        "nodeId": 0,
+        "x": -139,
+        "y": -24
+      },
+      {
+        "itemId": 1,
+        "itemType": "node",
+        "nodeId": 1,
+        "x": 114,
+        "y": -24
+      },
+      {
+        "itemId": 3,
+        "itemType": "node",
+        "nodeId": 3,
+        "x": -139,
+        "y": 89
+      },
+      {
+        "itemId": 4,
+        "itemType": "node",
+        "nodeId": 4,
+        "x": 114,
+        "y": 89
+      },
+      {
+        "color": {
+          "a": 1,
+          "b": 0.580392182,
+          "g": 0.486274511,
+          "r": 0.349019617
+        },
+        "itemId": 5,
+        "itemType": "node",
+        "nodeId": 5,
+        "x": -9,
+        "y": 200
+      },
+      {
+        "itemId": 6,
+        "itemType": "node",
+        "nodeId": 6,
+        "x": -9,
+        "y": 311
+      }
+    ],
+    "layoutFormatVersion": 2
+  },
+  "metadata": {},
+  "nodes": {
+    "Basemesh": {
+      "isAlwaysVisible": true,
+      "isEnabled": true,
+      "nodeId": 0,
+      "nodeType": "LoadGeom",
+      "params": {
+        "fileName": {
+          "value": "$BASEMESH"
+        },
+        "rotation": {
+          "value": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "scale": {
+          "value": 1
+        },
+        "texture": {},
+        "translation": {
+          "value": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "visualParam": {
+          "value": {
+            "colorBack": {
+              "b": 23,
+              "g": 23,
+              "r": 23
+            },
+            "colorFront": {
+              "b": 255,
+              "g": 55,
+              "r": 11
+            },
+            "colorWire": {
+              "b": 34,
+              "g": 26,
+              "r": 17
+            },
+            "isLightingEnabled": true,
+            "isSurfaceEnabled": true,
+            "isWireframeEnabled": true,
+            "surfaceFillType": 1
+          }
+        }
+      }
+    },
+    "SaveGeom": {
+      "isAlwaysVisible": true,
+      "isEnabled": true,
+      "nodeId": 6,
+      "nodeType": "SaveGeom",
+      "params": {
+        "createDirectories": {
+          "value": true
+        },
+        "dracoCompression": {
+          "value": 7
+        },
+        "dracoNormalQuant": {
+          "value": 30
+        },
+        "dracoTexCoordQuant": {
+          "value": 30
+        },
+        "dracoVertexQuant": {
+          "value": 30
+        },
+        "fileName": {
+          "expression": "\n",
+          "value": "$OUTPUT"
+        },
+        "geom": {
+          "connectedNodeId": 5
+        },
+        "includeTransform": {
+          "value": true
+        },
+        "saveNormals": {
+          "value": false
+        }
+      }
+    },
+    "Scan": {
+      "isAlwaysVisible": false,
+      "isEnabled": true,
+      "nodeId": 1,
+      "nodeType": "LoadGeom",
+      "params": {
+        "fileName": {
+          "value": "$SCAN"
+        },
+        "rotation": {
+          "value": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "scale": {
+          "value": 1
+        },
+        "texture": {},
+        "translation": {
+          "value": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "visualParam": {
+          "value": {
+            "colorBack": {
+              "b": 23,
+              "g": 23,
+              "r": 23
+            },
+            "colorFront": {
+              "b": 255,
+              "g": 55,
+              "r": 11
+            },
+            "colorWire": {
+              "b": 34,
+              "g": 26,
+              "r": 17
+            },
+            "isLightingEnabled": true,
+            "isSurfaceEnabled": true,
+            "isWireframeEnabled": false,
+            "surfaceFillType": 1
+          }
+        }
+      }
+    },
+    "SelectPointPairs": {
+      "isAlwaysVisible": true,
+      "isEnabled": true,
+      "nodeId": 4,
+      "nodeType": "SelectPointPairs",
+      "params": {
+        "fileNameLeft": {
+          "expression": "\n",
+          "value": "$LEFT_LANDMARKS"
+        },
+        "fileNameRight": {
+          "expression": "\n",
+          "value": "$RIGHT_LANDMARKS"
+        },
+        "geomLeft": {
+          "connectedNodeId": 0
+        },
+        "geomRight": {
+          "connectedNodeId": 1
+        },
+        "pointsFormatLeft": {
+          "value": 1
+        },
+        "pointsFormatRight": {
+          "value": 1
+        },
+        "pointsLeft": {
+          "value": []
+        },
+        "pointsRight": {
+          "value": []
+        },
+        "sourceLeft": {
+          "value": 1
+        },
+        "sourceRight": {
+          "value": 1
+        },
+        "symmetryLeft": {
+          "value": 0
+        },
+        "symmetryRight": {
+          "value": 0
+        },
+        "syncTransform": {
+          "value": {
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "rotationQuat": {
+              "scalar": 1,
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "scale": 1,
+            "translation": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          }
+        },
+        "syncViews": {
+          "value": true
+        }
+      }
+    },
+    "SelectPolygons": {
+      "isAlwaysVisible": true,
+      "isEnabled": true,
+      "nodeId": 3,
+      "nodeType": "SelectPolygons",
+      "params": {
+        "displayMode": {
+          "value": 1
+        },
+        "fileName": {
+          "expression": "\n",
+          "value": "$FREE_POLYGONS_FLOATING"
+        },
+        "geom": {
+          "connectedNodeId": 0
+        },
+        "invisiblePolygonIndices": {
+          "value": []
+        },
+        "selection": {
+          "value": []
+        },
+        "source": {
+          "value": 1
+        }
+      }
+    },
+    "Wrapping": {
+      "isAlwaysVisible": false,
+      "isEnabled": true,
+      "nodeId": 5,
+      "nodeType": "FastWrapping",
+      "params": {
+        "autocompute": {
+          "value": true
+        },
+        "geomFixed": {
+          "connectedNodeId": 1
+        },
+        "geomFloating": {
+          "connectedNodeId": 0
+        },
+        "globalControlPointsWeightFinal": {
+          "value": 10
+        },
+        "globalControlPointsWeightInitial": {
+          "value": 10
+        },
+        "globalPoint2PlaneFittingWeight": {
+          "value": 1
+        },
+        "globalPoint2PointFittingWeight": {
+          "value": 0.100000001
+        },
+        "globalSmoothWeightMax": {
+          "value": 1
+        },
+        "globalSmoothWeightMin": {
+          "value": 0.0500000007
+        },
+        "maxDp": {
+          "value": 0.00999999978
+        },
+        "maxOptimizationIterations": {
+          "value": 100
+        },
+        "minCosBetweenNormals": {
+          "value": 0.649999976
+        },
+        "minDp": {
+          "value": 0.00200000009
+        },
+        "nICPIterations": {
+          "value": 7
+        },
+        "nNodesToUse": {
+          "value": 8
+        },
+        "nOptimizationIterations": {
+          "value": 20
+        },
+        "nSubdivisions": {
+          "value": 3
+        },
+        "normalizeSampling": {
+          "value": true
+        },
+        "points": {
+          "connectedNodeId": 4
+        },
+        "polygons": {
+          "connectedNodeId": 3
+        },
+        "samplingMax": {
+          "value": 10
+        },
+        "samplingMin": {
+          "value": 0.100000001
+        },
+        "samplingType": {
+          "value": 0
+        }
+      }
+    }
+  },
+  "pythonCode": "",
+  "timeline": {
+    "current": 0,
+    "max": 25,
+    "min": 0
+  }
+}

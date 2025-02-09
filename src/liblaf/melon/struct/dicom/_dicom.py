@@ -8,7 +8,7 @@ import pydicom.valuerep
 import pyvista as pv
 
 from liblaf import melon
-from liblaf.melon.typing import StrPath
+from liblaf.melon.typed import StrPath
 
 from . import DICOMMeta, dcmread_cached, parse_date
 

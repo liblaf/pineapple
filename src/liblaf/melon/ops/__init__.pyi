@@ -1,4 +1,11 @@
-from . import correspondence, pyvista, registration, transfer, transformations
+from . import (
+    correspondence,
+    pyvista,
+    registration,
+    selection,
+    transfer,
+    transformations,
+)
 from .correspondence import (
     NearestPointOnSurface,
     NearestPointOnSurfacePrepared,
@@ -59,6 +66,7 @@ __all__ = [
     "pyvista",
     "registration",
     "rigid_align",
+    "selection",
     "transfer",
     "transfer_point_to_point",
     "transform",

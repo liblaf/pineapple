@@ -3,7 +3,7 @@ import functools
 
 import pydicom
 
-from liblaf.melon.typing import StrPath
+from liblaf.melon.typed import StrPath
 
 type DateLike = str | datetime.datetime | datetime.date
 

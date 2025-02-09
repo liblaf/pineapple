@@ -4,9 +4,9 @@ from typing import Any
 import pyvista as pv
 
 from liblaf import melon
-from liblaf.melon.typing import StrPath
+from liblaf.melon.typed import StrPath
 
-from . import as_poly_data, match_path
+from . import as_poly_data, match_path, save_obj
 
 
 class PolyDataWriter(melon.io.AbstractWriter):
@@ -17,4 +17,7 @@ class PolyDataWriter(melon.io.AbstractWriter):
         path = Path(path)
         obj: pv.PolyData = as_poly_data(obj)
         path.parent.mkdir(parents=True, exist_ok=True)
-        obj.save(path)
+        if path.suffix == ".obj":
+            save_obj(path, obj)
+        else:
+            obj.save(path)

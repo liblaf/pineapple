@@ -6,7 +6,7 @@ from typing import Literal, Self
 # make pyright happy
 import liblaf.grapes as grapes  # noqa: PLR0402
 from liblaf import melon
-from liblaf.melon.typing import StrPath
+from liblaf.melon.typed import StrPath
 
 from . import AcquisitionMeta, Attachments
 

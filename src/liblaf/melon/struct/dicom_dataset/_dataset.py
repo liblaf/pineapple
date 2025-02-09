@@ -4,7 +4,7 @@ from typing import Self
 
 import liblaf.grapes as grapes  # noqa: PLR0402
 from liblaf import melon
-from liblaf.melon.typing import StrPath
+from liblaf.melon.typed import StrPath
 
 from . import Acquisition, Attachments, DICOMDatasetMeta, Subject, SubjectMeta
 

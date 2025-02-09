@@ -7,7 +7,7 @@ from jaxtyping import ScalarLike
 
 from liblaf import melon
 from liblaf.melon.ops.transfer._utils import get_fill_value
-from liblaf.melon.typing import Attrs
+from liblaf.melon.typed import Attrs
 
 from . import TransferAlgorithm, TransferAlgorithmPrepared, TransferAuto
 

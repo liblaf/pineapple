@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from liblaf.melon.typing import StrPath
+from liblaf.melon.typed import StrPath
 
 
 class UnsupportedReaderError(ValueError):

@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pyvista as pv
 
-from liblaf.melon.typing import StrPath
+from liblaf.melon.typed import StrPath
 
 
 def load_image_data(path: StrPath) -> pv.ImageData:

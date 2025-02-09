@@ -1,7 +1,7 @@
 from typing import Any
 
 from liblaf import melon
-from liblaf.melon.typing import StrPath
+from liblaf.melon.typed import StrPath
 
 from . import writer_dispatcher
 

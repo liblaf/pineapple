@@ -1,11 +1,12 @@
 from typing import Any
-from venv import logger
 
 import attrs
 import numpy as np
 import pyvista as pv
 import trimesh as tm
 from jaxtyping import Bool, Float
+from loguru import logger
+from numpy.typing import ArrayLike
 
 from liblaf import melon
 
@@ -21,14 +22,20 @@ class RigidICP(RigidRegistrationAlgorithm):
     translation: bool = True
     corresp_algo: melon.NearestVertex = attrs.field(factory=melon.NearestVertex)
 
-    def register(self, source: Any, target: Any) -> RigidRegistrationResult:
+    def register(
+        self, source: Any, target: Any, *, init_transform: Float[ArrayLike, "4 4"]
+    ) -> RigidRegistrationResult:
         corresp_algo_prepared: melon.NearestVertexPrepared = self.corresp_algo.prepare(
             target
         )
         source: pv.PolyData = melon.as_poly_data(source)
         target: pv.PolyData = melon.as_poly_data(target)
-        result: RigidRegistrationResult = RigidRegistrationResult(
-            loss=np.nan, transformation=np.eye(4)
+        init_transform: Float[np.ndarray, "4 4"] = np.asarray(init_transform)
+        result = RigidRegistrationResult(
+            init_transform=init_transform,
+            loss=np.nan,
+            transformation=init_transform,
+            history=[np.eye(4)],
         )
         source_weights: Float[np.ndarray, " N"] | None = source.point_data.get(
             "Weights"
@@ -37,17 +44,22 @@ class RigidICP(RigidRegistrationAlgorithm):
             "Weights"
         )
         for it in range(self.max_iters):
-            corresp: melon.NearestVertexResult = corresp_algo_prepared.query(target)
+            transformed: pv.PolyData = source.transform(
+                result.transformation, inplace=False
+            )  # pyright: ignore[reportAssignmentType]
+            corresp: melon.NearestVertexResult = corresp_algo_prepared.query(
+                transformed
+            )
             valid_mask: Bool[np.ndarray, " N"] = ~corresp.missing
             matrix: Float[np.ndarray, "4 4"]
             cost: float
-            source_points: Float[np.ndarray, "N 3"] = source.points[valid_mask]
+            source_points: Float[np.ndarray, "N 3"] = transformed.points[valid_mask]
             target_points: Float[np.ndarray, "N 3"] = corresp.nearest[valid_mask]
-            weights: Float[np.ndarray, " N"] = np.ones(source_points.shape[0])
+            weights: Float[np.ndarray, " N"] = np.ones((source_points.shape[0],))
             if source_weights:
                 weights *= source_weights[valid_mask]
             if target_weights:
-                weights *= target_weights[valid_mask]
+                weights *= target_weights[corresp.vertex_id[valid_mask]]
             matrix, _, cost = tm.registration.procrustes(
                 source_points,
                 target_points,
@@ -57,10 +69,12 @@ class RigidICP(RigidRegistrationAlgorithm):
                 scale=self.scale,
                 return_cost=True,
             )
-            result.transformation = matrix @ result.transformation
-            logger.debug("ICP ({}) > loss = {}", it, cost)
-            if result.loss - cost < self.loss_threshold:
-                break
+            last_loss: float = result.loss
             result.loss = cost
-            source = source.transform(matrix, inplace=True)  # pyright: ignore[reportAssignmentType]
+            result.transformation = matrix @ result.transformation
+            result.history.append(result.transformation)
+            # log loss metric
+            logger.debug("ICP (it: {}) > loss: {}", it, cost)
+            if last_loss - cost < self.loss_threshold:
+                break
         return result

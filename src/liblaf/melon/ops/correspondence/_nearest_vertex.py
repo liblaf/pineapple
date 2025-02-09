@@ -65,7 +65,7 @@ class NearestVertexPrepared:
         vertex_id: Integer[np.ndarray, " N"] = result.vertex_id
         remaining_vertex_id: Integer[np.ndarray, " R"] = missing.nonzero()[0]
         k: int = 2
-        while k <= self.max_k and remaining_vertex_id:
+        while k <= self.max_k and remaining_vertex_id.size > 0:
             d: Float[np.ndarray, "R k"]
             v: Integer[np.ndarray, "R k"]
             d, v = self.tree.query(

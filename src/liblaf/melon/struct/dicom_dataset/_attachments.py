@@ -5,7 +5,7 @@ from typing import Any, Self
 import pyvista as pv
 
 from liblaf import melon
-from liblaf.melon.typing import StrPath
+from liblaf.melon.typed import StrPath
 
 
 class Attachments:
