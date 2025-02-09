@@ -59,7 +59,7 @@ license = "MIT"
 name = "liblaf-melon"
 readme = "docs/README.md"
 requires-python = ">=3.12"
-version = "0.0.0"
+version = "0.1.0"
 
 [project.urls]
 "Changelog" = "https://github.com/liblaf/melon/blob/main/CHANGELOG.md"
