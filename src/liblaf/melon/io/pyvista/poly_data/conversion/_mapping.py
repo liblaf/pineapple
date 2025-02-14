@@ -1,5 +1,6 @@
 from collections.abc import Mapping
 
+import glom
 import pyvista as pv
 
 from liblaf import melon
@@ -11,5 +12,5 @@ class MappingToPolyData(melon.io.AbstractConverter):
 
     def convert(self, obj: Mapping) -> pv.PolyData:
         return pv.PolyData.from_regular_faces(
-            obj["points"], obj.get("faces") or obj["cells"]
+            obj["points"], glom.glom(obj, glom.Coalesce("faces", "cells"))
         )

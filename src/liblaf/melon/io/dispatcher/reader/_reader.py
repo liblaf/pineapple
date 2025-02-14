@@ -1,4 +1,5 @@
 import abc
+from collections.abc import Container
 from pathlib import Path
 from typing import Any
 
@@ -6,7 +7,7 @@ from liblaf.melon.typed import StrPath
 
 
 class AbstractReader(abc.ABC):
-    extension: str
+    extensions: Container[str]
     priority: int = 0
 
     @abc.abstractmethod
@@ -14,4 +15,4 @@ class AbstractReader(abc.ABC):
 
     def match_path(self, path: StrPath) -> bool:
         path = Path(path)
-        return path.suffix == self.extension
+        return path.suffix in self.extensions

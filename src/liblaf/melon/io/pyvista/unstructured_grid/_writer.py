@@ -7,17 +7,14 @@ import pyvista as pv
 from liblaf import melon
 from liblaf.melon.typed import StrPath
 
-from . import as_poly_data, save_obj
+from . import as_unstructured_grid
 
 
-class PolyDataWriter(melon.io.AbstractWriter):
-    extensions: Container[str] = {".obj", ".stl", ".vtp", ".ply"}
+class UnstructuredGridWriter(melon.io.AbstractWriter):
+    extensions: Container[str] = {"*.vtu"}
 
     def save(self, path: StrPath, obj: Any) -> None:
         path = Path(path)
-        obj: pv.PolyData = as_poly_data(obj)
+        obj: pv.UnstructuredGrid = as_unstructured_grid(obj)
         path.parent.mkdir(parents=True, exist_ok=True)
-        if path.suffix == ".obj":
-            save_obj(path, obj)
-        else:
-            obj.save(path)
+        obj.save(path)

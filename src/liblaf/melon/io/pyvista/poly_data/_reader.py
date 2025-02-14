@@ -1,3 +1,4 @@
+from collections.abc import Container
 from pathlib import Path
 
 import pyvista as pv
@@ -5,7 +6,7 @@ import pyvista as pv
 from liblaf import melon
 from liblaf.melon.typed import StrPath
 
-from . import load_obj, match_path
+from . import load_obj
 
 
 def load_poly_data(path: StrPath) -> pv.PolyData:
@@ -16,8 +17,7 @@ def load_poly_data(path: StrPath) -> pv.PolyData:
 
 
 class PolyDataReader(melon.io.AbstractReader):
-    def match_path(self, path: StrPath) -> bool:
-        return match_path(path)
+    extensions: Container[str] = {".obj", ".stl", ".vtp", ".ply"}
 
     def load(self, path: StrPath) -> pv.PolyData:
         return load_poly_data(path)
