@@ -1,6 +1,26 @@
 # Changelog
 
-## [0.1.0] - 2025-02-05
+## [0.1.1](https://github.com/liblaf/melon/compare/v0.1.0..v0.1.1) - 2025-02-14
+
+### ✨ Features
+
+- **io:** add unstructured grid support for PyVista - ([0bb7bbe](https://github.com/liblaf/melon/commit/0bb7bbee0e5da312aea3930e83139df0dccb8a21))
+- add fast wrapping and rigid alignment pipelines - ([b3b7434](https://github.com/liblaf/melon/commit/b3b7434f70da9800440eda23186bf676f8646106))
+
+### ⬆️ Dependencies
+
+- **deps:** update dependency liblaf-grapes to >=0.0.4,<0.0.5 (#3) - ([5c8c9ff](https://github.com/liblaf/melon/commit/5c8c9ffe547c5098ecd447dd66666119b1a4dc9d))
+
+### 👷 Build System
+
+- update build dependencies and configuration - ([65f966e](https://github.com/liblaf/melon/commit/65f966e2f46e90937c505d7ca078d72551a267e6))
+
+### ❤️ New Contributors
+
+- @liblaf made their first contribution
+- @renovate[bot] made their first contribution in [#3](https://github.com/liblaf/melon/pull/3)
+
+## [0.1.0] - 2025-02-09
 
 ### ✨ Features
 
@@ -25,4 +45,5 @@
 
 ### ❤️ New Contributors
 
+- @github-actions[bot] made their first contribution in [#2](https://github.com/liblaf/melon/pull/2)
 - @liblaf made their first contribution
