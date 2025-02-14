@@ -16,7 +16,13 @@ from .correspondence import (
     nearest_point_on_surface,
     nearest_vertex,
 )
-from .pyvista import contour, extract_points, gaussian_smooth, transform
+from .pyvista import (
+    contour,
+    ensure_positive_volume,
+    extract_points,
+    gaussian_smooth,
+    transform,
+)
 from .registration import (
     RigidICP,
     RigidRegistrationAlgorithm,
@@ -58,6 +64,7 @@ __all__ = [
     "concat_transforms",
     "contour",
     "correspondence",
+    "ensure_positive_volume",
     "extract_points",
     "gaussian_smooth",
     "get_fill_value",

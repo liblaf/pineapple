@@ -24,8 +24,10 @@ from .pyvista import (
     as_image_data,
     as_point_set,
     as_poly_data,
+    as_unstructured_grid,
     load_image_data,
     load_poly_data,
+    load_unstructured_grid,
 )
 from .trimesh import as_trimesh
 from .wrap import (
@@ -50,6 +52,7 @@ __all__ = [
     "as_point_set",
     "as_poly_data",
     "as_trimesh",
+    "as_unstructured_grid",
     "conversion_dispatcher",
     "convert",
     "dispatcher",
@@ -61,6 +64,7 @@ __all__ = [
     "load_landmarks",
     "load_poly_data",
     "load_polygons",
+    "load_unstructured_grid",
     "melon",
     "pyvista",
     "reader_dispatcher",

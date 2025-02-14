@@ -74,6 +74,7 @@ requires-python = ">=3.12"
 
 [project.urls]
 "Changelog" = "https://github.com/liblaf/melon/blob/main/CHANGELOG.md"
+"Documentation" = "https://liblaf.github.io/melon/"
 "Homepage" = "https://github.com/liblaf/melon"
 "Issue Tracker" = "https://github.com/liblaf/melon/issues"
 "Release Notes" = "https://github.com/liblaf/melon/releases"
