@@ -1,14 +1,20 @@
 # Changelog
 
-## [0.1.2](https://github.com/liblaf/melon/compare/v0.1.1..v0.1.2) - 2025-02-14
+## [0.1.3](https://github.com/liblaf/melon/compare/v0.1.2..v0.1.3) - 2025-02-16
 
-### ✨ Features
+### ⬆️ Dependencies
 
-- add support for unstructured grid operations and documentation link - ([aa118c7](https://github.com/liblaf/melon/commit/aa118c7857cf783b75377b6b20f1e2e94ae3f787))
+- **deps:** update liblaf-grapes dependency to v0.1.0 - ([d8579ac](https://github.com/liblaf/melon/commit/d8579ac3fe26a44358c5a234c3053c02f26cefaf))
 
 ### ❤️ New Contributors
 
 - @liblaf made their first contribution
+
+## [0.1.2](https://github.com/liblaf/melon/compare/v0.1.1..v0.1.2) - 2025-02-16
+
+### ✨ Features
+
+- add support for unstructured grid operations and documentation link - ([aa118c7](https://github.com/liblaf/melon/commit/aa118c7857cf783b75377b6b20f1e2e94ae3f787))
 
 ## [0.1.1](https://github.com/liblaf/melon/compare/v0.1.0..v0.1.1) - 2025-02-14
 
