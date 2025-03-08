@@ -19,7 +19,7 @@ def main(
 ) -> None:
     grapes.init_logging()
     if output is None:
-        output = grapes.git.root_safe() / "data/template/00-raw/sculptor"
+        output = grapes.git.root_safe() / "data/template/wrap/00-raw/sculptor"
     paradict_path = Path(
         pooch.retrieve(
             url="https://raw.githubusercontent.com/sculptor2022/sculptor/refs/heads/main/model/paradict.npy",

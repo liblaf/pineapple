@@ -11,5 +11,5 @@ from . import get_landmarks_path
 
 def load_landmarks(path: StrPath) -> Float[np.ndarray, "N 3"]:
     path: Path = get_landmarks_path(path)
-    data: list[dict[str, float]] = grapes.deserialize(path)
+    data: list[dict[str, float]] = grapes.load_json(path)
     return np.asarray([[p["x"], p["y"], p["z"]] for p in data])
