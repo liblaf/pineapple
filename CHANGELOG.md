@@ -1,14 +1,20 @@
 # Changelog
 
+## [0.1.4](https://github.com/liblaf/melon/compare/v0.1.3..v0.1.4) - 2025-03-08
+
+### ✨ Features
+
+- enhance file handling and add rigid alignment for face models - ([acdeab3](https://github.com/liblaf/melon/commit/acdeab341ee450f4b234edb516db645139bc61a5))
+
+### ❤️ New Contributors
+
+- @liblaf made their first contribution
+
 ## [0.1.3](https://github.com/liblaf/melon/compare/v0.1.2..v0.1.3) - 2025-02-16
 
 ### ⬆️ Dependencies
 
 - **deps:** update liblaf-grapes dependency to v0.1.0 - ([d8579ac](https://github.com/liblaf/melon/commit/d8579ac3fe26a44358c5a234c3053c02f26cefaf))
-
-### ❤️ New Contributors
-
-- @liblaf made their first contribution
 
 ## [0.1.2](https://github.com/liblaf/melon/compare/v0.1.1..v0.1.2) - 2025-02-16
 
