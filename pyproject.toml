@@ -5,7 +5,7 @@
 name = "liblaf-pineapple"
 description = ""
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 license = "MIT"
 authors = [
   { name = "liblaf", email = "30631553+liblaf@users.noreply.github.com" }
@@ -20,12 +20,18 @@ classifiers = [
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
   "Typing :: Typed"
 ]
-dependencies = ["lazy-loader>=0.4,<0.5"]
+dependencies = [
+  "anyio>=4.12,<5",
+  "filelock>=3.16,<4",
+  "msgspec>=0.19,<1",
+  "platformdirs>=4.3,<5",
+  "pydantic>=2.11,<3",
+  "wrapt>=2,<3"
+]
 dynamic = ["version"]
 
 [project.urls]
