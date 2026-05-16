@@ -27,7 +27,7 @@ jobs:
         name: Build and Inspect a Python Package
         uses: hynek/build-and-inspect-python-package@v2
       - name: Setup Python
-        uses: liblaf/actions/setup-python@v1
+        uses: liblaf/actions/setup-python@0d18501335a3b930ccc19923d9439102a05367fd # v3
       - id: collect
         name: Collect
         run: |-
@@ -54,7 +54,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
       - name: Setup Python
-        uses: liblaf/actions/setup-python@v1
+        uses: liblaf/actions/setup-python@0d18501335a3b930ccc19923d9439102a05367fd # v3
       - name: Install Mise
         uses: jdx/mise-action@v3
       - name: Bench
