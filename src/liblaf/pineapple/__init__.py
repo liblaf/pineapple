@@ -1,3 +1,10 @@
+from liblaf.pineapple._version import (
+    __version__,
+    __version_tuple__,
+    version,
+    version_tuple,
+)
+
 from liblaf.pineapple._src.decorators import (
     cache,
     cache_async,
@@ -9,12 +16,6 @@ from liblaf.pineapple._src.storage import (
     LRUMaxPolicy,
     PrunePolicy,
     SyncFolderStorage,
-)
-from liblaf.pineapple._version import (
-    __version__,
-    __version_tuple__,
-    version,
-    version_tuple,
 )
 from liblaf.pineapple.keys import key_to_relpath, validate_key
 
