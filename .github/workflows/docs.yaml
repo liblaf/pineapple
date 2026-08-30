@@ -28,7 +28,7 @@ jobs:
       - name: Set Environment Variables
         run: echo 'SITE_URL=${{ steps.config.outputs.base_url }}' >> "$GITHUB_ENV"
       - name: Setup Python
-        uses: liblaf/actions/setup-python@v1
+        uses: liblaf/actions/setup-python@73cad6439f8583d4bac35cdbdc6541aa0b6395c3 # v3
       - if: hashFiles('docs/scripts/pre-build.sh') != ''
         name: Pre-Build
         run: docs/scripts/pre-build.sh
