@@ -122,41 +122,60 @@ from collections.abc import Awaitable, Callable
 import os
 from typing import Any
 
+
 def cache[**P, T](
-  fn: Callable[P, T] | None = None,
-  *,
-  storage: SyncFolderStorage | None = None,
-  key: KeyFunc = default_key,
-  ttl: TTLValue | TtlFunc | None = None,
-  metadata: Callable[[tuple[Any, ...], dict[str, Any], T], dict[str, Any] | None] = ...,
+    fn: Callable[P, T] | None = None,
+    *,
+    storage: SyncFolderStorage | None = None,
+    key: KeyFunc = default_key,
+    ttl: TTLValue | TtlFunc | None = None,
+    metadata: Callable[
+        [tuple[Any, ...], dict[str, Any], T], dict[str, Any] | None
+    ] = ...,
 ) -> Callable[P, T] | Callable[[Callable[P, T]], Callable[P, T]]: ...
+
 
 def cache_async[**P, T](
-  fn: Callable[P, Awaitable[T]] | None = None,
-  *,
-  storage: AsyncFolderStorage | None = None,
-  key: KeyFunc = default_key,
-  ttl: TTLValue | TtlFunc | None = None,
-  metadata: Callable[[tuple[Any, ...], dict[str, Any], T], dict[str, Any] | None] = ...,
-) -> Callable[P, Awaitable[T]] | Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]: ...
+    fn: Callable[P, Awaitable[T]] | None = None,
+    *,
+    storage: AsyncFolderStorage | None = None,
+    key: KeyFunc = default_key,
+    ttl: TTLValue | TtlFunc | None = None,
+    metadata: Callable[
+        [tuple[Any, ...], dict[str, Any], T], dict[str, Any] | None
+    ] = ...,
+) -> (
+    Callable[P, Awaitable[T]]
+    | Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]
+): ...
+
 
 def cache_method[**P, T](
-  fn: Callable[P, T] | None = None,
-  *,
-  storage: str | SyncFolderStorage,
-  key: MethodKeyFunc = default_key,
-  ttl: TTLValue | MethodTtlFunc | None = None,
-  metadata: Callable[[tuple[Any, ...], dict[str, Any], T], dict[str, Any] | None] = ...,
+    fn: Callable[P, T] | None = None,
+    *,
+    storage: str | SyncFolderStorage,
+    key: MethodKeyFunc = default_key,
+    ttl: TTLValue | MethodTtlFunc | None = None,
+    metadata: Callable[
+        [tuple[Any, ...], dict[str, Any], T], dict[str, Any] | None
+    ] = ...,
 ) -> Callable[P, T] | Callable[[Callable[P, T]], Callable[P, T]]: ...
 
+
 def cache_method_async[**P, T](
-  fn: Callable[P, Awaitable[T]] | None = None,
-  *,
-  storage: str | AsyncFolderStorage,
-  key: MethodKeyFunc = default_key,
-  ttl: TTLValue | MethodTtlFunc | None = None,
-  metadata: Callable[[tuple[Any, ...], dict[str, Any], T], dict[str, Any] | None] = ...,
-) -> Callable[P, Awaitable[T]] | Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]: ...
+    fn: Callable[P, Awaitable[T]] | None = None,
+    *,
+    storage: str | AsyncFolderStorage,
+    key: MethodKeyFunc = default_key,
+    ttl: TTLValue | MethodTtlFunc | None = None,
+    metadata: Callable[
+        [tuple[Any, ...], dict[str, Any], T], dict[str, Any] | None
+    ] = ...,
+) -> (
+    Callable[P, Awaitable[T]]
+    | Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]
+): ...
+
 
 def hash(value: Any) -> str: ...
 ```
@@ -179,82 +198,83 @@ import anyio
 from pathlib import Path
 from typing import Any, Self
 
+
 class SyncFolderStorage:
-  def __init__(
-    self,
-    path: str | os.PathLike[str],
-    *,
-    inputs_writer: InputsWriter | None = None,
-    output_reader: OutputReader[Any] | None = None,
-    output_writer: OutputWriter[Any] | None = None,
-  ) -> None: ...
+    def __init__(
+        self,
+        path: str | os.PathLike[str],
+        *,
+        inputs_writer: InputsWriter | None = None,
+        output_reader: OutputReader[Any] | None = None,
+        output_writer: OutputWriter[Any] | None = None,
+    ) -> None: ...
 
-  @classmethod
-  def user_cache(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
-  @classmethod
-  def relative(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
-  @classmethod
-  def absolute(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
+    @classmethod
+    def user_cache(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
+    @classmethod
+    def relative(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
+    @classmethod
+    def absolute(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
 
-  @property
-  def root_dir(self) -> Path: ...
+    @property
+    def root_dir(self) -> Path: ...
 
-  def entry_dir(self, key: str) -> Path: ...
-  def lock_path(self, key: str) -> Path: ...
-  def contains(self, key: str) -> bool: ...
-  def get(self, key: str) -> Any: ...  # raises KeyError if missing/expired
-  def put(
-    self,
-    key: str,
-    *,
-    args: tuple[Any, ...],
-    kwargs: dict[str, Any],
-    output: Any,
-    user_metadata: dict[str, Any] | None = None,
-    library_metadata: EntryMetadataPatch | dict[str, Any] | None = None,
-  ) -> None: ...
-  def write_inputs(self, key: str, *args: Any, **kwargs: Any) -> None: ...
-  def delete(self, key: str) -> None: ...
-  def clear(self) -> None: ...
+    def entry_dir(self, key: str) -> Path: ...
+    def lock_path(self, key: str) -> Path: ...
+    def contains(self, key: str) -> bool: ...
+    def get(self, key: str) -> Any: ...  # raises KeyError if missing/expired
+    def put(
+        self,
+        key: str,
+        *,
+        args: tuple[Any, ...],
+        kwargs: dict[str, Any],
+        output: Any,
+        user_metadata: dict[str, Any] | None = None,
+        library_metadata: EntryMetadataPatch | dict[str, Any] | None = None,
+    ) -> None: ...
+    def write_inputs(self, key: str, *args: Any, **kwargs: Any) -> None: ...
+    def delete(self, key: str) -> None: ...
+    def clear(self) -> None: ...
 
 
 class AsyncFolderStorage:
-  def __init__(
-    self,
-    path: str | os.PathLike[str],
-    *,
-    inputs_writer: AsyncInputsWriter | None = None,
-    output_reader: AsyncOutputReader[Any] | None = None,
-    output_writer: AsyncOutputWriter[Any] | None = None,
-  ) -> None: ...
+    def __init__(
+        self,
+        path: str | os.PathLike[str],
+        *,
+        inputs_writer: AsyncInputsWriter | None = None,
+        output_reader: AsyncOutputReader[Any] | None = None,
+        output_writer: AsyncOutputWriter[Any] | None = None,
+    ) -> None: ...
 
-  @classmethod
-  def user_cache(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
-  @classmethod
-  def relative(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
-  @classmethod
-  def absolute(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
+    @classmethod
+    def user_cache(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
+    @classmethod
+    def relative(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
+    @classmethod
+    def absolute(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
 
-  @property
-  def root_dir(self) -> anyio.Path: ...
+    @property
+    def root_dir(self) -> anyio.Path: ...
 
-  def entry_dir(self, key: str) -> anyio.Path: ...
-  def lock_path(self, key: str) -> anyio.Path: ...
-  async def contains(self, key: str) -> bool: ...
-  async def get(self, key: str) -> Any: ...  # raises KeyError if missing/expired
-  async def put(
-    self,
-    key: str,
-    *,
-    args: tuple[Any, ...],
-    kwargs: dict[str, Any],
-    output: Any,
-    user_metadata: dict[str, Any] | None = None,
-    library_metadata: EntryMetadataPatch | dict[str, Any] | None = None,
-  ) -> None: ...
-  async def write_inputs(self, key: str, *args: Any, **kwargs: Any) -> None: ...
-  async def delete(self, key: str) -> None: ...
-  async def clear(self) -> None: ...
+    def entry_dir(self, key: str) -> anyio.Path: ...
+    def lock_path(self, key: str) -> anyio.Path: ...
+    async def contains(self, key: str) -> bool: ...
+    async def get(self, key: str) -> Any: ...  # raises KeyError if missing/expired
+    async def put(
+        self,
+        key: str,
+        *,
+        args: tuple[Any, ...],
+        kwargs: dict[str, Any],
+        output: Any,
+        user_metadata: dict[str, Any] | None = None,
+        library_metadata: EntryMetadataPatch | dict[str, Any] | None = None,
+    ) -> None: ...
+    async def write_inputs(self, key: str, *args: Any, **kwargs: Any) -> None: ...
+    async def delete(self, key: str) -> None: ...
+    async def clear(self) -> None: ...
 ```
 
 Storage argument semantics:
@@ -277,8 +297,11 @@ Storage argument semantics:
 ```python
 from typing import Any
 
+
 def hashkey(*args: Any, **kwargs: Any) -> str: ...
-def method_key(*args: Any, **kwargs: Any) -> str: ...  # excludes first positional arg from hashing
+def method_key(
+    *args: Any, **kwargs: Any
+) -> str: ...  # excludes first positional arg from hashing
 ```
 
 4. Public error contract.
