@@ -11,9 +11,9 @@
 
 ## Architecture
 
-- Public API is canonicalized in `src/liblaf/pineapple/__init__.py`.
-- Key helpers are canonically exposed from `src/liblaf/pineapple/keys.py`.
-- Everything under `src/liblaf/pineapple/_src/` is internal implementation namespace.
+- Public API is canonicalized in `src/liblaf/cache/__init__.py`.
+- Key helpers are canonically exposed from `src/liblaf/cache/keys.py`.
+- Everything under `src/liblaf/cache/_src/` is internal implementation namespace.
 - Internal domains are split by responsibility:
   - `decorators/` decorator APIs and helper flows
   - `storage/` storage core + fs/metadata helpers

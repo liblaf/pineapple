@@ -2,15 +2,15 @@
 # ref: <https://packaging.python.org/en/latest/specifications/pyproject-toml/>
 
 [project]
-name = "liblaf-pineapple"
-description = ""
+name = "liblaf-cache"
+description = "Directory-backed, single-flight disk caching with inspectable native formats."
 readme = "README.md"
 requires-python = ">=3.13"
 license = "MIT"
 authors = [
   { name = "liblaf", email = "30631553+liblaf@users.noreply.github.com" }
 ]
-keywords = []
+keywords = ["cache", "diskcache", "joblib", "shelve"]
 classifiers = [
   # ref: <https://pypi.org/classifiers/>
   "Development Status :: 4 - Beta",
@@ -27,27 +27,30 @@ classifiers = [
 dependencies = [
   "anyio>=4.12,<5",
   "filelock>=3.16,<4",
+  "joblib>=1.6,<2",
   "msgspec>=0.19,<1",
   "platformdirs>=4.3,<5",
-  "pydantic>=2.11,<3",
+  "pydantic>=2.12,<3",
   "wrapt>=2,<3"
 ]
 dynamic = ["version"]
 
 [project.urls]
 # ref: <https://packaging.python.org/en/latest/specifications/well-known-project-urls/#well-known-labels>
-"Changelog" = "https://github.com/liblaf/pineapple/blob/main/CHANGELOG.md"
-"Documentation" = "https://liblaf.github.io/pineapple/"
-"Funding" = "https://github.com/liblaf/pineapple?sponsor=1"
-"Homepage" = "https://github.com/liblaf/pineapple"
-"Issue Tracker" = "https://github.com/liblaf/pineapple/issues"
-"Release Notes" = "https://github.com/liblaf/pineapple/releases"
-"Source Code" = "https://github.com/liblaf/pineapple"
+"Changelog" = "https://github.com/liblaf/cache/blob/main/CHANGELOG.md"
+"Documentation" = "https://liblaf.github.io/cache/"
+"Funding" = "https://github.com/liblaf/cache?sponsor=1"
+"Homepage" = "https://github.com/liblaf/cache"
+"Issue Tracker" = "https://github.com/liblaf/cache/issues"
+"Release Notes" = "https://github.com/liblaf/cache/releases"
+"Source Code" = "https://github.com/liblaf/cache"
 
 [dependency-groups]
 dev = []
-build = ["check-wheel-contents>=0.6,<0.7", "hatch>=1,<2", "twine>=6,<7"]
-docs = ["liblaf-mkdocs-preset>=0.3,<0.4", "mkdocs>=1,<2"]
+build = ["check-wheel-contents>=0.6,<0.7", "hatch>=1,<2", "twine>=7,<8"]
+docs = ["griffe-fieldz>=0.5", "griffe-inherited-docstrings>=1", "griffe-pydantic>=1", "griffe-warnings-deprecated>=1", "mkdocstrings[python]>=1", "zensical>=0.0.44"]
+lint = ["import-linter>=2,<3", "ruff>=0.15,<1", "ty>=0.0.40,<1"]
+nox = ["nox>=2026"]
 test = ["liblaf-pytest-preset>=0.1,<0.2", "pytest>=9,<10"]
 
 [build-system]
@@ -62,7 +65,7 @@ branch = true
 source = ["src"]
 
 [tool.hatch.build.hooks.vcs]
-version-file = "src/liblaf/pineapple/_version.py"
+version-file = "src/liblaf/cache/_version.py"
 
 [tool.hatch.build.targets.sdist]
 only-include = ["src"]
@@ -73,8 +76,13 @@ packages = ["src/liblaf"]
 [tool.hatch.version]
 source = "vcs"
 
-[tool.pyright]
-extends = ".config/linters/pyrightconfig.json"
+[tool.importlinter]
+root_package = "liblaf.cache"
+
+[[tool.importlinter.contracts]]
+ancestors = ["liblaf.cache"]
+name = "Acyclic siblings"
+type = "acyclic_siblings"
 
 [tool.pytest]
 addopts = [
@@ -84,11 +92,12 @@ addopts = [
   "--showlocals"
 ]
 consider_namespace_packages = true
+pythonpath = ["src"]
 strict = true
 testpaths = ["benches", "src", "tests"]
 
 [tool.ruff]
-extend = ".config/linters/.ruff.toml"
+extend = ".config/linters/ruff.toml"
 
 [tool.uv]
 default-groups = "all"

@@ -14,8 +14,8 @@ This library is in early development; backward compatibility and migration suppo
 
 1. Oversized core modules are reducing maintainability.
 
-- `src/liblaf/pineapple/_src/decorators.py` is 465 lines.
-- `src/liblaf/pineapple/_src/storage.py` is 381 lines.
+- `src/liblaf/cache/_src/decorators.py` is 465 lines.
+- `src/liblaf/cache/_src/storage.py` is 381 lines.
 - These exceed the previously stated target of <= 300 lines and make review/change safety worse.
 
 2. Sync/async logic duplication is high in critical paths.
@@ -31,7 +31,7 @@ This library is in early development; backward compatibility and migration suppo
 
 4. Dead/unused code exists in hot modules.
 
-- `_DEFAULT_SYNC_STORAGE` and `_DEFAULT_ASYNC_STORAGE` in `src/liblaf/pineapple/_src/decorators_support.py` are not used.
+- `_DEFAULT_SYNC_STORAGE` and `_DEFAULT_ASYNC_STORAGE` in `src/liblaf/cache/_src/decorators_support.py` are not used.
 - `write_inputs` methods in storage classes appear unused by current decorators.
 
 5. Side effects are mixed into read-style methods.
@@ -71,13 +71,13 @@ This library is in early development; backward compatibility and migration suppo
 
 - Every public object must have exactly one canonical import path.
 - No duplicated public re-exports across canonical public modules.
-- Top-level package (`liblaf.pineapple`) should only expose the approved public surface.
-- Key helpers (`hashkey`, `method_key`) are canonically exposed from `liblaf.pineapple.keys`.
+- Top-level package (`liblaf.cache`) should only expose the approved public surface.
+- Key helpers (`hashkey`, `method_key`) are canonically exposed from `liblaf.cache.keys`.
 - Internal `_src` re-exports are allowed for private convenience, but they do not define canonical public import paths.
 
 2. Private object policy.
 
-- Private modules are private by namespace when located under `liblaf.pineapple._src.*`; module filenames there do not require a leading `_`.
+- Private modules are private by namespace when located under `liblaf.cache._src.*`; module filenames there do not require a leading `_`.
 - Private functions, classes, methods, and constants must start with `_`.
 - Any non-`_` symbol is considered public-candidate and must not be exposed at top-level unless explicitly approved as public API.
 - Internal helper modules should remain under internal namespace and never be top-level exports.
@@ -91,7 +91,7 @@ This library is in early development; backward compatibility and migration suppo
 
 All public APIs must come from exactly one canonical import path listed below.
 
-1. Canonical module: `liblaf.pineapple`
+1. Canonical module: `liblaf.cache`
 
 - `cache`
 - `cache_async`
@@ -101,62 +101,81 @@ All public APIs must come from exactly one canonical import path listed below.
 - `AsyncFolderStorage`
 - `hash`
 
-2. Canonical module: `liblaf.pineapple.keys`
+2. Canonical module: `liblaf.cache.keys`
 
 - `hashkey`
 - `method_key` (must exclude first positional arg: `self`/`cls`)
 
 3. Non-public by policy
 
-- Everything under `liblaf.pineapple._src.*` is internal implementation namespace.
+- Everything under `liblaf.cache._src.*` is internal implementation namespace.
 - No `_src` module may be treated as an additional canonical public location.
 
 ## Public API Reference (Detailed Prototypes)
 
 This section is the implementation-facing contract for the canonical public API.
 
-1. Module `liblaf.pineapple`: decorators and core storage types.
+1. Module `liblaf.cache`: decorators and core storage types.
 
 ```python
 from collections.abc import Awaitable, Callable
 import os
 from typing import Any
 
+
 def cache[**P, T](
-  fn: Callable[P, T] | None = None,
-  *,
-  storage: SyncFolderStorage | None = None,
-  key: KeyFunc = default_key,
-  ttl: TTLValue | TtlFunc | None = None,
-  metadata: Callable[[tuple[Any, ...], dict[str, Any], T], dict[str, Any] | None] = ...,
+    fn: Callable[P, T] | None = None,
+    *,
+    storage: SyncFolderStorage | None = None,
+    key: KeyFunc = default_key,
+    ttl: TTLValue | TtlFunc | None = None,
+    metadata: Callable[
+        [tuple[Any, ...], dict[str, Any], T], dict[str, Any] | None
+    ] = ...,
 ) -> Callable[P, T] | Callable[[Callable[P, T]], Callable[P, T]]: ...
+
 
 def cache_async[**P, T](
-  fn: Callable[P, Awaitable[T]] | None = None,
-  *,
-  storage: AsyncFolderStorage | None = None,
-  key: KeyFunc = default_key,
-  ttl: TTLValue | TtlFunc | None = None,
-  metadata: Callable[[tuple[Any, ...], dict[str, Any], T], dict[str, Any] | None] = ...,
-) -> Callable[P, Awaitable[T]] | Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]: ...
+    fn: Callable[P, Awaitable[T]] | None = None,
+    *,
+    storage: AsyncFolderStorage | None = None,
+    key: KeyFunc = default_key,
+    ttl: TTLValue | TtlFunc | None = None,
+    metadata: Callable[
+        [tuple[Any, ...], dict[str, Any], T], dict[str, Any] | None
+    ] = ...,
+) -> (
+    Callable[P, Awaitable[T]]
+    | Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]
+): ...
+
 
 def cache_method[**P, T](
-  fn: Callable[P, T] | None = None,
-  *,
-  storage: str | SyncFolderStorage,
-  key: MethodKeyFunc = default_key,
-  ttl: TTLValue | MethodTtlFunc | None = None,
-  metadata: Callable[[tuple[Any, ...], dict[str, Any], T], dict[str, Any] | None] = ...,
+    fn: Callable[P, T] | None = None,
+    *,
+    storage: str | SyncFolderStorage,
+    key: MethodKeyFunc = default_key,
+    ttl: TTLValue | MethodTtlFunc | None = None,
+    metadata: Callable[
+        [tuple[Any, ...], dict[str, Any], T], dict[str, Any] | None
+    ] = ...,
 ) -> Callable[P, T] | Callable[[Callable[P, T]], Callable[P, T]]: ...
 
+
 def cache_method_async[**P, T](
-  fn: Callable[P, Awaitable[T]] | None = None,
-  *,
-  storage: str | AsyncFolderStorage,
-  key: MethodKeyFunc = default_key,
-  ttl: TTLValue | MethodTtlFunc | None = None,
-  metadata: Callable[[tuple[Any, ...], dict[str, Any], T], dict[str, Any] | None] = ...,
-) -> Callable[P, Awaitable[T]] | Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]: ...
+    fn: Callable[P, Awaitable[T]] | None = None,
+    *,
+    storage: str | AsyncFolderStorage,
+    key: MethodKeyFunc = default_key,
+    ttl: TTLValue | MethodTtlFunc | None = None,
+    metadata: Callable[
+        [tuple[Any, ...], dict[str, Any], T], dict[str, Any] | None
+    ] = ...,
+) -> (
+    Callable[P, Awaitable[T]]
+    | Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]
+): ...
+
 
 def hash(value: Any) -> str: ...
 ```
@@ -171,7 +190,7 @@ Decorator argument semantics:
 - `metadata`: receives only `(args, kwargs, result)` and returns user metadata payload.
 - Lock acquisition is blocking by default in this version; timeout parameters are intentionally not exposed.
 
-2. Module `liblaf.pineapple`: storage class public methods.
+2. Module `liblaf.cache`: storage class public methods.
 
 ```python
 import os
@@ -179,82 +198,83 @@ import anyio
 from pathlib import Path
 from typing import Any, Self
 
+
 class SyncFolderStorage:
-  def __init__(
-    self,
-    path: str | os.PathLike[str],
-    *,
-    inputs_writer: InputsWriter | None = None,
-    output_reader: OutputReader[Any] | None = None,
-    output_writer: OutputWriter[Any] | None = None,
-  ) -> None: ...
+    def __init__(
+        self,
+        path: str | os.PathLike[str],
+        *,
+        inputs_writer: InputsWriter | None = None,
+        output_reader: OutputReader[Any] | None = None,
+        output_writer: OutputWriter[Any] | None = None,
+    ) -> None: ...
 
-  @classmethod
-  def user_cache(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
-  @classmethod
-  def relative(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
-  @classmethod
-  def absolute(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
+    @classmethod
+    def user_cache(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
+    @classmethod
+    def relative(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
+    @classmethod
+    def absolute(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
 
-  @property
-  def root_dir(self) -> Path: ...
+    @property
+    def root_dir(self) -> Path: ...
 
-  def entry_dir(self, key: str) -> Path: ...
-  def lock_path(self, key: str) -> Path: ...
-  def contains(self, key: str) -> bool: ...
-  def get(self, key: str) -> Any: ...  # raises KeyError if missing/expired
-  def put(
-    self,
-    key: str,
-    *,
-    args: tuple[Any, ...],
-    kwargs: dict[str, Any],
-    output: Any,
-    user_metadata: dict[str, Any] | None = None,
-    library_metadata: EntryMetadataPatch | dict[str, Any] | None = None,
-  ) -> None: ...
-  def write_inputs(self, key: str, *args: Any, **kwargs: Any) -> None: ...
-  def delete(self, key: str) -> None: ...
-  def clear(self) -> None: ...
+    def entry_dir(self, key: str) -> Path: ...
+    def lock_path(self, key: str) -> Path: ...
+    def contains(self, key: str) -> bool: ...
+    def get(self, key: str) -> Any: ...  # raises KeyError if missing/expired
+    def put(
+        self,
+        key: str,
+        *,
+        args: tuple[Any, ...],
+        kwargs: dict[str, Any],
+        output: Any,
+        user_metadata: dict[str, Any] | None = None,
+        library_metadata: EntryMetadataPatch | dict[str, Any] | None = None,
+    ) -> None: ...
+    def write_inputs(self, key: str, *args: Any, **kwargs: Any) -> None: ...
+    def delete(self, key: str) -> None: ...
+    def clear(self) -> None: ...
 
 
 class AsyncFolderStorage:
-  def __init__(
-    self,
-    path: str | os.PathLike[str],
-    *,
-    inputs_writer: AsyncInputsWriter | None = None,
-    output_reader: AsyncOutputReader[Any] | None = None,
-    output_writer: AsyncOutputWriter[Any] | None = None,
-  ) -> None: ...
+    def __init__(
+        self,
+        path: str | os.PathLike[str],
+        *,
+        inputs_writer: AsyncInputsWriter | None = None,
+        output_reader: AsyncOutputReader[Any] | None = None,
+        output_writer: AsyncOutputWriter[Any] | None = None,
+    ) -> None: ...
 
-  @classmethod
-  def user_cache(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
-  @classmethod
-  def relative(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
-  @classmethod
-  def absolute(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
+    @classmethod
+    def user_cache(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
+    @classmethod
+    def relative(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
+    @classmethod
+    def absolute(cls, path: str | os.PathLike[str], **kwargs: Any) -> Self: ...
 
-  @property
-  def root_dir(self) -> anyio.Path: ...
+    @property
+    def root_dir(self) -> anyio.Path: ...
 
-  def entry_dir(self, key: str) -> anyio.Path: ...
-  def lock_path(self, key: str) -> anyio.Path: ...
-  async def contains(self, key: str) -> bool: ...
-  async def get(self, key: str) -> Any: ...  # raises KeyError if missing/expired
-  async def put(
-    self,
-    key: str,
-    *,
-    args: tuple[Any, ...],
-    kwargs: dict[str, Any],
-    output: Any,
-    user_metadata: dict[str, Any] | None = None,
-    library_metadata: EntryMetadataPatch | dict[str, Any] | None = None,
-  ) -> None: ...
-  async def write_inputs(self, key: str, *args: Any, **kwargs: Any) -> None: ...
-  async def delete(self, key: str) -> None: ...
-  async def clear(self) -> None: ...
+    def entry_dir(self, key: str) -> anyio.Path: ...
+    def lock_path(self, key: str) -> anyio.Path: ...
+    async def contains(self, key: str) -> bool: ...
+    async def get(self, key: str) -> Any: ...  # raises KeyError if missing/expired
+    async def put(
+        self,
+        key: str,
+        *,
+        args: tuple[Any, ...],
+        kwargs: dict[str, Any],
+        output: Any,
+        user_metadata: dict[str, Any] | None = None,
+        library_metadata: EntryMetadataPatch | dict[str, Any] | None = None,
+    ) -> None: ...
+    async def write_inputs(self, key: str, *args: Any, **kwargs: Any) -> None: ...
+    async def delete(self, key: str) -> None: ...
+    async def clear(self) -> None: ...
 ```
 
 Storage argument semantics:
@@ -272,13 +292,16 @@ Storage argument semantics:
 - `put(...)`: requires explicit `args`, `kwargs`, and `output`; optional `user_metadata` and library metadata patch.
 - `contains(key)`: may perform expiry cleanup as part of existence checks.
 
-3. Module `liblaf.pineapple.keys`: canonical key helper API.
+3. Module `liblaf.cache.keys`: canonical key helper API.
 
 ```python
 from typing import Any
 
+
 def hashkey(*args: Any, **kwargs: Any) -> str: ...
-def method_key(*args: Any, **kwargs: Any) -> str: ...  # excludes first positional arg from hashing
+def method_key(
+    *args: Any, **kwargs: Any
+) -> str: ...  # excludes first positional arg from hashing
 ```
 
 4. Public error contract.
@@ -292,7 +315,7 @@ def method_key(*args: Any, **kwargs: Any) -> str: ...  # excludes first position
 ### Target Source Layout (Grouped)
 
 ```text
-src/liblaf/pineapple/
+src/liblaf/cache/
   __init__.py                        # single public export surface
   keys.py                            # canonical public key helpers (hashkey, method_key)
   _src/
@@ -330,50 +353,49 @@ src/liblaf/pineapple/
 
 ### Mapping From Current Files
 
-1. `src/liblaf/pineapple/_src/decorators.py` -> `src/liblaf/pineapple/_src/decorators/decorators.py`
-2. `src/liblaf/pineapple/_src/storage.py` -> `src/liblaf/pineapple/_src/storage/core.py` + `src/liblaf/pineapple/_src/storage/metadata.py` + `src/liblaf/pineapple/_src/storage/fs_sync.py` + `src/liblaf/pineapple/_src/storage/fs_async.py`
-3. `src/liblaf/pineapple/_src/codecs.py` -> `src/liblaf/pineapple/_src/io/codecs.py` + codec family modules
-4. `src/liblaf/pineapple/_src/keying.py` -> `src/liblaf/pineapple/_src/keying/hash.py` + `src/liblaf/pineapple/_src/keying/keys.py`
-5. `src/liblaf/pineapple/_src/{types.py,ttl.py,paths.py}` -> `src/liblaf/pineapple/_src/shared/`
-6. `src/liblaf/pineapple/_src/decorators_support.py` -> `src/liblaf/pineapple/_src/decorators/decorators_support.py`
-7. New public facade: `src/liblaf/pineapple/keys.py` -> thin canonical export module for key helpers.
+1. `src/liblaf/cache/_src/decorators.py` -> `src/liblaf/cache/_src/decorators/decorators.py`
+2. `src/liblaf/cache/_src/storage.py` -> `src/liblaf/cache/_src/storage/core.py` + `src/liblaf/cache/_src/storage/metadata.py` + `src/liblaf/cache/_src/storage/fs_sync.py` + `src/liblaf/cache/_src/storage/fs_async.py`
+3. `src/liblaf/cache/_src/codecs.py` -> `src/liblaf/cache/_src/io/codecs.py` + codec family modules
+4. `src/liblaf/cache/_src/keying.py` -> `src/liblaf/cache/_src/keying/hash.py` + `src/liblaf/cache/_src/keying/keys.py`
+5. `src/liblaf/cache/_src/{types.py,ttl.py,paths.py}` -> `src/liblaf/cache/_src/shared/`
+6. `src/liblaf/cache/_src/decorators_support.py` -> `src/liblaf/cache/_src/decorators/decorators_support.py`
+7. New public facade: `src/liblaf/cache/keys.py` -> thin canonical export module for key helpers.
 
 ### Grouping Rules
 
-1. Use domain packages under `src/liblaf/pineapple/_src/` (`decorators`, `storage`, `io`, `shared`, `keying`) rather than one large flat folder.
-2. Public object definitions can live in grouped `_src` modules, but each public object has exactly one canonical exposure location in the documented export map (for example `src/liblaf/pineapple/__init__.py` for core API, `src/liblaf/pineapple/keys.py` for key helpers).
+1. Use domain packages under `src/liblaf/cache/_src/` (`decorators`, `storage`, `io`, `shared`, `keying`) rather than one large flat folder.
+2. Public object definitions can live in grouped `_src` modules, but each public object has exactly one canonical exposure location in the documented export map (for example `src/liblaf/cache/__init__.py` for core API, `src/liblaf/cache/keys.py` for key helpers).
 3. Modules inside `_src` do not need `_` filename prefixes; privacy is established by `_src` namespace and top-level export policy.
 4. Keep depth shallow: at most two layers under `_src`.
 5. Keep each module focused and under 300 lines where practical.
-
 6. Decorator decomposition.
 
-- Keep implementation entrypoints in `src/liblaf/pineapple/_src/decorators/decorators.py` only.
-- Keep canonical public exposure for decorator symbols at `src/liblaf/pineapple/__init__.py`.
+- Keep implementation entrypoints in `src/liblaf/cache/_src/decorators/decorators.py` only.
+- Keep canonical public exposure for decorator symbols at `src/liblaf/cache/__init__.py`.
 - Move shared lock + read-through + write-through flow into internal helpers:
-  - `src/liblaf/pineapple/_src/decorators/decorators_core.py` for common cache orchestration.
-  - `src/liblaf/pineapple/_src/decorators/decorators_sync.py` and `src/liblaf/pineapple/_src/decorators/decorators_async.py` for minimal mode-specific adapters.
+  - `src/liblaf/cache/_src/decorators/decorators_core.py` for common cache orchestration.
+  - `src/liblaf/cache/_src/decorators/decorators_sync.py` and `src/liblaf/cache/_src/decorators/decorators_async.py` for minimal mode-specific adapters.
 - Keep wrapt and overload signatures in public module; move implementation details out.
 
 2. Storage decomposition.
 
 - Split metadata and file lifecycle helpers from class definitions:
-  - `src/liblaf/pineapple/_src/storage/metadata.py` for metadata read/write/merge/expiry utilities.
-  - `src/liblaf/pineapple/_src/storage/fs_sync.py` and `src/liblaf/pineapple/_src/storage/fs_async.py` for filesystem operations.
-- Keep class APIs in `src/liblaf/pineapple/_src/storage/core.py` but delegate to small helpers.
+  - `src/liblaf/cache/_src/storage/metadata.py` for metadata read/write/merge/expiry utilities.
+  - `src/liblaf/cache/_src/storage/fs_sync.py` and `src/liblaf/cache/_src/storage/fs_async.py` for filesystem operations.
+- Keep class APIs in `src/liblaf/cache/_src/storage/core.py` but delegate to small helpers.
 
 3. Codec decomposition.
 
 - Extract codec families into separate modules:
-  - `src/liblaf/pineapple/_src/io/json.py`, `src/liblaf/pineapple/_src/io/numpy.py`, `src/liblaf/pineapple/_src/io/pickle.py`, `src/liblaf/pineapple/_src/io/default.py`.
-- Keep external behavior unchanged; naming may be normalized for consistency (for example `load_*` / `save_*`) when fully propagated through `src/liblaf/pineapple/_src/io/codecs.py`.
+  - `src/liblaf/cache/_src/io/json.py`, `src/liblaf/cache/_src/io/numpy.py`, `src/liblaf/cache/_src/io/pickle.py`, `src/liblaf/cache/_src/io/default.py`.
+- Keep external behavior unchanged; naming may be normalized for consistency (for example `load_*` / `save_*`) when fully propagated through `src/liblaf/cache/_src/io/codecs.py`.
 
 4. Key helper surface.
 
-- Add `src/liblaf/pineapple/_src/keying/keys.py` with:
+- Add `src/liblaf/cache/_src/keying/keys.py` with:
   - `hashkey(*args, **kwargs) -> str`: stable hash-based key helper for regular callables.
   - `method_key(*args, **kwargs) -> str`: method helper that excludes the first positional arg (`self`/`cls`) from key hashing.
-- Expose canonical public API from `src/liblaf/pineapple/keys.py` only.
+- Expose canonical public API from `src/liblaf/cache/keys.py` only.
 - Keep behavior deterministic and aligned with the same hash primitive used by `hash`/`default_key`.
 
 5. Exception policy cleanup.
@@ -415,9 +437,9 @@ src/liblaf/pineapple/
 
 - Assert exported symbols match the `Public API Catalog (Canonical)` exactly.
 - Assert each public symbol has one canonical location only.
-- Assert `hashkey` and `method_key` are canonically exposed from `liblaf.pineapple.keys`.
+- Assert `hashkey` and `method_key` are canonically exposed from `liblaf.cache.keys`.
 - Assert private symbols (`_`-prefixed functions/classes/methods/constants) are not top-level exports.
-- Assert modules under `liblaf.pineapple._src.*` are not treated as additional canonical public locations.
+- Assert modules under `liblaf.cache._src.*` are not treated as additional canonical public locations.
 
 Acceptance:
 
@@ -427,14 +449,14 @@ Acceptance:
 
 ### Phase 2 - Decorators Refactor
 
-1. Extract orchestration internals from `src/liblaf/pineapple/_src/decorators/decorators.py`.
+1. Extract orchestration internals from `src/liblaf/cache/_src/decorators/decorators.py`.
 2. Preserve exact public signatures and overloads.
 3. Keep method decorators API parity with function decorators (`fn=None` -> partial).
 4. Preserve wrapped callable typing (`P`, `T`) and method typing behavior through wrappers.
 
 Acceptance:
 
-- `src/liblaf/pineapple/_src/decorators/decorators.py` <= 280 lines.
+- `src/liblaf/cache/_src/decorators/decorators.py` <= 280 lines.
 - No public signature changes.
 - Type-checking confirms decorated callables keep original callable signatures/return types.
 - Existing/new tests pass.
@@ -447,7 +469,7 @@ Acceptance:
 
 Acceptance:
 
-- `src/liblaf/pineapple/_src/storage/core.py` <= 280 lines.
+- `src/liblaf/cache/_src/storage/core.py` <= 280 lines.
 - All storage tests pass unchanged.
 
 ### Phase 4 - Codec Refactor

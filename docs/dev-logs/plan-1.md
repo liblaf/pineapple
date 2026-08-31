@@ -31,13 +31,13 @@ Define a clean v1 API with no backward-compatibility constraints, emphasizing:
 - Keep `None` only where it semantically means "disabled" (for example, `ttl=None` means no expiration).
 - Prefer deterministic runtime behavior without per-call fallback branching.
 
-4. Provide `pineapple.hash(...)` helper
+4. Provide `cache.hash(...)` helper
 
 - Add stable short-hash helper for user-defined key strategies.
 - Hashing implementation should use a stable cryptographic digest (for example, SHA-256; MD5 only if explicitly chosen for compatibility/perf tradeoffs).
 - Typical replacement for old hashkey patterns:
-  - `key=lambda *args, **kwargs: pineapple.hash(args)`
-  - `key=lambda *args, **kwargs: pineapple.hash({"args": args, "kwargs": kwargs})`
+  - `key=lambda *args, **kwargs: cache.hash(args)`
+  - `key=lambda *args, **kwargs: cache.hash({"args": args, "kwargs": kwargs})`
 
 5. No backward compatibility in v1 development
 
@@ -71,7 +71,7 @@ Define a clean v1 API with no backward-compatibility constraints, emphasizing:
 
 3. Keying module
 
-- Public helper: `pineapple.hash(value) -> str`.
+- Public helper: `cache.hash(value) -> str`.
 - Default key generation uses same stable hash primitive.
 
 ## Discussion Checklist
@@ -80,7 +80,7 @@ Define a clean v1 API with no backward-compatibility constraints, emphasizing:
 
 - Do we allow runtime mutation of storage hooks after initialization, or keep them constructor-only?
 
-2. `pineapple.hash` contract
+2. `cache.hash` contract
 
 - Exact truncation length and stability guarantees across versions.
 - Expected behavior for optional dependencies (NumPy present/absent).
@@ -108,7 +108,7 @@ Define a clean v1 API with no backward-compatibility constraints, emphasizing:
 
 2. Keying tests
 
-- `pineapple.hash` deterministic behavior across representative payloads.
+- `cache.hash` deterministic behavior across representative payloads.
 
 3. Storage hook tests
 
@@ -136,7 +136,7 @@ Complete validation and follow-up refactors, then freeze this plan.
 
 - Decorator APIs now expose concrete defaults for `storage`, `key`, and `metadata`.
 - `hashkey` is absent from runtime source APIs (`src/`), keeping `key` as the only exposed keying option.
-- `pineapple.hash(...)` is available and uses stable SHA-256 based hashing.
+- `cache.hash(...)` is available and uses stable SHA-256 based hashing.
 - User metadata is namespaced under `metadata["user"]` and no longer merged into library-managed top-level keys.
 - Async input-writer contracts now use `anyio.Path`; sync contracts use `pathlib.Path`.
 

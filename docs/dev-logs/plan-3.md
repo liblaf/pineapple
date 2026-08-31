@@ -2,7 +2,7 @@
 
 Date: 2026-03-07
 Status: Proposed
-Scope: storage architecture redesign (`src/liblaf/pineapple/_src/storage/*`, docs, tests)
+Scope: storage architecture redesign (`src/liblaf/cache/_src/storage/*`, docs, tests)
 
 ## Goal
 
@@ -44,22 +44,22 @@ No implementation changes are performed in this plan. This is the contract for s
 
 ## Source Layout (Fresh Restart)
 
-This layout is designed for a clean rebuild where `src/liblaf/pineapple` starts nearly empty.
+This layout is designed for a clean rebuild where `src/liblaf/cache` starts nearly empty.
 The goal is to keep each module focused, preserve canonical public exports, and keep `_src` internal.
 
 ### Canonical public modules
 
-- `src/liblaf/pineapple/__init__.py`
+- `src/liblaf/cache/__init__.py`
   - Canonical public exports for storage classes and policy types.
   - Re-export only; no implementation logic.
-- `src/liblaf/pineapple/keys.py`
+- `src/liblaf/cache/keys.py`
   - Canonical public exports for key helpers.
   - Re-export only; no implementation logic.
 
 ### Internal implementation tree
 
 ```text
-src/liblaf/pineapple/
+src/liblaf/cache/
   __init__.py
   keys.py
   _src/
@@ -200,6 +200,7 @@ class SyncFolderStorage:
         prune_policy: PrunePolicy | None = None,
     ) -> None: ...
 
+
 class AsyncFolderStorage:
     def __init__(
         self,
@@ -223,12 +224,14 @@ class SyncInputsWriter(Protocol):
         **kwargs: Any,
     ) -> None: ...
 
+
 class SyncOutputWriter(Protocol):
     def __call__(
         self,
         folder: pathlib.Path,
         output: Any,
     ) -> None: ...
+
 
 class AsyncInputsWriter(Protocol):
     def __call__(
@@ -237,6 +240,7 @@ class AsyncInputsWriter(Protocol):
         *args: Any,
         **kwargs: Any,
     ) -> Awaitable[None]: ...
+
 
 class AsyncOutputWriter(Protocol):
     def __call__(
@@ -304,7 +308,7 @@ class EntryMetadataModel(pydantic.BaseModel):
 
 ### Global index database (LRU-minimal)
 
-Database file: `<root>/.pineapple-index.sqlite3`
+Database file: `<root>/.cache-index.sqlite3`
 
 `entries` table (minimum):
 
@@ -351,9 +355,10 @@ class IndexStore:
 
     # Stage B: required when pruning is enabled
     def totals(self) -> tuple[int, int]: ...  # (total_bytes, total_entries)
-    def iter_lru(self) -> Iterable[tuple[str, int]]: ...  # (key, size_bytes), oldest first
+    def iter_lru(
+        self,
+    ) -> Iterable[tuple[str, int]]: ...  # (key, size_bytes), oldest first
     def delete_keys(self, keys: list[str]) -> None: ...
-
 ```
 
 Method needs by stage:
@@ -432,8 +437,7 @@ class PrunePolicy(Protocol):
         self,
         *,
         index: IndexStore,
-    ) -> bool:
-        ...
+    ) -> bool: ...
 
     def select_victims(
         self,

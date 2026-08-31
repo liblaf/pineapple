@@ -1,3 +1,0 @@
-INHERIT: .config/copier/mkdocs.yaml
-site_name: "Pineapple"
-site_description:

@@ -1,7 +1,7 @@
 # Plan 0: Current Implementation Plan
 
 Date: 2026-03-07
-Scope: `liblaf/pineapple` internal cache core (`src/liblaf/pineapple/_src`)
+Scope: `liblaf/cache` internal cache core (`src/liblaf/cache/_src`)
 
 ## Current Architecture (Implemented)
 
