@@ -200,6 +200,7 @@ class SyncFolderStorage:
         prune_policy: PrunePolicy | None = None,
     ) -> None: ...
 
+
 class AsyncFolderStorage:
     def __init__(
         self,
@@ -223,12 +224,14 @@ class SyncInputsWriter(Protocol):
         **kwargs: Any,
     ) -> None: ...
 
+
 class SyncOutputWriter(Protocol):
     def __call__(
         self,
         folder: pathlib.Path,
         output: Any,
     ) -> None: ...
+
 
 class AsyncInputsWriter(Protocol):
     def __call__(
@@ -237,6 +240,7 @@ class AsyncInputsWriter(Protocol):
         *args: Any,
         **kwargs: Any,
     ) -> Awaitable[None]: ...
+
 
 class AsyncOutputWriter(Protocol):
     def __call__(
@@ -351,9 +355,10 @@ class IndexStore:
 
     # Stage B: required when pruning is enabled
     def totals(self) -> tuple[int, int]: ...  # (total_bytes, total_entries)
-    def iter_lru(self) -> Iterable[tuple[str, int]]: ...  # (key, size_bytes), oldest first
+    def iter_lru(
+        self,
+    ) -> Iterable[tuple[str, int]]: ...  # (key, size_bytes), oldest first
     def delete_keys(self, keys: list[str]) -> None: ...
-
 ```
 
 Method needs by stage:
@@ -432,8 +437,7 @@ class PrunePolicy(Protocol):
         self,
         *,
         index: IndexStore,
-    ) -> bool:
-        ...
+    ) -> bool: ...
 
     def select_victims(
         self,
