@@ -25,12 +25,6 @@ def _pytest(s: nox.Session, *args: str) -> None:
     s.run("pytest", *args, *s.posargs, env={"EAGER_IMPORT": "1"}, success_codes=[0, 5])
 
 
-@nox.session(tags=["bench"])
-def bench(s: nox.Session) -> None:
-    _install(s, resolution="highest")
-    _pytest(s, "-m", "benchmark", "--codspeed")
-
-
 @nox.session(python=PYTHON_VERSIONS, tags=["test"])
 @nox.parametrize(
     "resolution",
