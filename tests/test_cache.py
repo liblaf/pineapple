@@ -23,12 +23,42 @@ from liblaf.cache import (
     cache,
     cache_async,
 )
+from liblaf.cache._src.io import repr as repr_io
 from liblaf.cache._src.storage.index.sqlite import open_sqlite
 
 
 class JoblibOutput:
     def __init__(self) -> None:
         self.answer = 42
+
+
+def test_inputs_use_optional_pprint_text_presentation(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[object] = []
+
+    class Presentation:
+        def text(self) -> str:
+            return "presented"
+
+    module = types.SimpleNamespace(
+        pretty=lambda value: calls.append(value) or Presentation(),
+    )
+    monkeypatch.setattr(repr_io.importlib, "import_module", lambda _name: module)
+
+    assert repr_io._format_inputs((1,), {"answer": 42}) == "presented"  # noqa: SLF001
+    assert calls == [{"args": (1,), "kwargs": {"answer": 42}}]
+
+
+def test_inputs_fall_back_to_standard_library_pprint(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def missing_optional(_name: str) -> object:
+        raise ModuleNotFoundError(name="liblaf.pprint")
+
+    monkeypatch.setattr(repr_io.importlib, "import_module", missing_optional)
+
+    assert repr_io._format_inputs((1,), {}) == "{'args': (1,), 'kwargs': {}}"  # noqa: SLF001
 
 
 def test_index_connection_context_closes_connection(tmp_path: Path) -> None:

@@ -16,7 +16,7 @@ def _format_inputs(args: tuple[Any, ...], kwargs: dict[str, Any]) -> str:
         if error.name != "liblaf.pprint":
             raise
         return pprint.pformat(value)
-    return str(liblaf_pprint.pformat(value))
+    return liblaf_pprint.pretty(value).text()
 
 
 def write_repr_inputs_sync(folder: pathlib.Path, *args: Any, **kwargs: Any) -> None:
