@@ -6,3 +6,26 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Conventional Changelog](https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [v0.1.0](https://github.com/liblaf/cache/releases/tag/v0.1.0) - 2026-09-03
+
+### 💥 BREAKING CHANGES
+
+- import liblaf.cache instead of liblaf.pineapple. - [8cb53af](https://github.com/liblaf/cache/commit/8cb53af5aa8ada6427ab6a7f1173bf7cde5155aa) by [@liblaf](https://github.com/liblaf)
+
+### ✨ Features
+
+- initialize project structure using copier templates - [f1bc2ae](https://github.com/liblaf/cache/commit/f1bc2aea81f7e95f2651d0658432b1d20edbab68) by [@liblaf](https://github.com/liblaf)
+- **\[breaking\]** rename liblaf.pineapple to liblaf.cache - [8cb53af](https://github.com/liblaf/cache/commit/8cb53af5aa8ada6427ab6a7f1173bf7cde5155aa) by [@liblaf](https://github.com/liblaf)
+
+### ♻️ Code Refactoring
+
+- adopt pprint text presentation - [1aa4d89](https://github.com/liblaf/cache/commit/1aa4d894daf277cc6038860bd0ccce8dfefb8b87) by [@liblaf](https://github.com/liblaf)
+
+### ⚙️ Continuous Integrations
+
+- skip absent benchmark suite - [9d392c2](https://github.com/liblaf/cache/commit/9d392c222be7ea62401ce3e330b93ecc43c27b52) by [@liblaf](https://github.com/liblaf)
+
+### ❤️ Contributors
+
+- [@liblaf](https://github.com/liblaf) made their first contribution
